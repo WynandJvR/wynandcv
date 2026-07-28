@@ -127,8 +127,8 @@ app.post('/demo/start', async (req, res) => {
       name: CONTAINER_NAME,
       HostConfig: {
         PortBindings: { [`${VNC_PORT}/tcp`]: [{ HostPort: String(VNC_PORT) }] },
-        Memory: 1024 * 1024 * 1024, // 1GB
-        NanoCpus: 1000000000, // 1 CPU
+        Memory: 2048 * 1024 * 1024, // 2GB
+        NanoCpus: 4000000000, // 4 CPUs, JavaFX renders in software so it needs headroom
         PidsLimit: 200,
         AutoRemove: true,
       },

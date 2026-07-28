@@ -24,9 +24,11 @@ sleep 1
 
 # Start VNC server (no password, shared mode)
 x11vnc -display :99 -forever -nopw -rfbport 5900 -shared -xkb \
-    -noxdamage \
-    -defer 10 \
-    -wait 10 &
+    -defer 5 \
+    -wait 5 \
+    -threads \
+    -nolookup \
+    -noxrecord -noxfixes &
 sleep 1
 
 # Start noVNC (WebSocket bridge: port 6080 -> VNC port 5900)
