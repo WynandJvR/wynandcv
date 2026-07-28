@@ -662,31 +662,6 @@
   </div>
 </section>
 
-<!-- Demo modal -->
-<div class="demo-modal" id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="demo-title">
-  <div class="demo-modal__bar">
-    <div class="demo-modal__id">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-      <span id="demo-title">Live demo</span>
-    </div>
-    <div class="demo-timer" id="demo-timer">10:00</div>
-    <button class="demo-modal__end" id="demo-end-btn">End session</button>
-  </div>
-  <div class="demo-viewer" id="demo-viewer">
-    <div class="demo-loading" id="demo-loading">
-      <div class="spinner" id="demo-spinner"></div>
-      <p class="demo-loading__title" id="demo-loading-title">Starting demo container…</p>
-      <p class="demo-loading__msg" id="demo-loading-msg">Booting an isolated environment on the server. This usually takes a few seconds.</p>
-      <ul class="boot-log" id="bootLog">
-        <li data-step>Reaching demo host over SSH tunnel</li>
-        <li data-step>Pulling container image</li>
-        <li data-step>Starting virtual display</li>
-        <li data-step>Launching application</li>
-        <li data-step>Opening remote session</li>
-      </ul>
-    </div>
-  </div>
-</div>
 
 <!-- Telemetry -->
 <section class="section" id="pi-stats">
@@ -948,6 +923,32 @@
     <div class="sheet__body" id="sheetBody"></div>
     <ul class="sheet__list" id="sheetList"></ul>
     <div class="sheet__tags" id="sheetTags"></div>
+  </div>
+</div>
+
+<!-- Demo modal -->
+<div class="demo-modal" id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="demo-title">
+  <div class="demo-modal__bar">
+    <div class="demo-modal__id">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      <span id="demo-title">Live demo</span>
+    </div>
+    <div class="demo-timer" id="demo-timer">10:00</div>
+    <button class="demo-modal__end" id="demo-end-btn">End session</button>
+  </div>
+  <div class="demo-viewer" id="demo-viewer">
+    <div class="demo-loading" id="demo-loading">
+      <div class="spinner" id="demo-spinner"></div>
+      <p class="demo-loading__title" id="demo-loading-title">Starting demo container…</p>
+      <p class="demo-loading__msg" id="demo-loading-msg">Booting an isolated environment on the server. This usually takes a few seconds.</p>
+      <ul class="boot-log" id="bootLog">
+        <li data-step>Reaching demo host over SSH tunnel</li>
+        <li data-step>Pulling container image</li>
+        <li data-step>Starting virtual display</li>
+        <li data-step>Launching application</li>
+        <li data-step>Opening remote session</li>
+      </ul>
+    </div>
   </div>
 </div>
 

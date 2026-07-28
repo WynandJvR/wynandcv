@@ -1345,7 +1345,10 @@ body.cursor-hover .cursor-dot { opacity: 0; }
 .demo-modal {
   position: fixed;
   inset: 0;
-  z-index: var(--z-overlay);
+  /* Above the console so a floating panel cannot cover the End session button.
+     Must stay a direct child of body: an ancestor with its own stacking
+     context would trap this z-index and let the nav paint over the top bar. */
+  z-index: calc(var(--z-overlay) + 8);
   background: rgba(3, 4, 6, 0.88);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
