@@ -1,0 +1,11 @@
+# Normalise to LF in the repo. Shell scripts run inside Linux containers,
+# and a CRLF shebang makes the kernel fail with "no such file or directory".
+* text=auto eol=lf
+
+*.sh      text eol=lf
+Dockerfile text eol=lf
+*.service text eol=lf
+*.service.example text eol=lf
+
+*.png binary
+*.ico binary
