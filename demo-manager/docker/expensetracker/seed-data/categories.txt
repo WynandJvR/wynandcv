@@ -1,0 +1,9 @@
+Groceries
+Transport
+Rent
+Food & Drink
+Utilities
+Entertainment
+Shopping
+Education
+Health

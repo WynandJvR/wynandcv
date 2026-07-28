@@ -1,0 +1,18 @@
+[Unit]
+Description=CV Website Demo Manager
+After=network.target
+Requires=demo-docker-tunnel.service
+After=demo-docker-tunnel.service
+
+[Service]
+Type=simple
+User=YOUR_PI_USER
+WorkingDirectory=/home/YOUR_PI_USER/cv-website/demo-manager
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+Environment=PORT=3001
+Environment=DEMO_REMOTE_HOST=YOUR_DEMO_HOST
+
+[Install]
+WantedBy=multi-user.target

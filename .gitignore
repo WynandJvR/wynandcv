@@ -1,0 +1,9 @@
+.env
+nohup.out
+analytics-dashboard.html
+**/node_modules/
+.cl*/
+CL*.md
+
+# Deployment units contain host-specific values
+demo-manager/*.service

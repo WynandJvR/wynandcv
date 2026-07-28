@@ -1,0 +1,110 @@
+5500.00,Rent,2026-01-01,Monthly rent payment,RECURRING,MONTHLY,
+45.00,Entertainment,2026-01-01,Spotify + Netflix subscriptions,RECURRING,MONTHLY,
+40.00,Health,2026-01-01,Gym membership,RECURRING,MONTHLY,
+70.00,Utilities,2026-01-01,Internet bill,RECURRING,MONTHLY,
+20000.00,Income,2026-01-01,Monthly salary,REGULAR,,INCOME
+20000.00,Income,2026-02-01,Monthly salary,REGULAR,,INCOME
+20000.00,Income,2026-03-01,Monthly salary,REGULAR,,INCOME
+20000.00,Income,2026-04-01,Monthly salary,REGULAR,,INCOME
+20000.00,Income,2026-05-01,Monthly salary,REGULAR,,INCOME
+95.00,Groceries,2026-01-02,Woolworths weekly shop,REGULAR
+35.00,Transport,2026-01-03,Uber to campus,REGULAR
+18.00,Food & Drink,2026-01-04,Coffee and muffin,REGULAR
+130.00,Groceries,2026-01-06,Checkers bulk buy,REGULAR
+55.00,Transport,2026-01-08,Petrol,REGULAR
+110.00,Utilities,2026-01-09,Electricity prepaid,REGULAR
+25.00,Food & Drink,2026-01-10,Lunch at Steers,REGULAR
+85.00,Shopping,2026-01-11,Summer clothing sale,REGULAR
+30.00,Entertainment,2026-01-12,Bowling with friends,REGULAR
+200.00,Education,2026-01-13,Udemy courses bundle,REGULAR
+105.00,Groceries,2026-01-15,Pick n Pay,REGULAR
+22.00,Transport,2026-01-16,Bus pass top-up,REGULAR
+45.00,Food & Drink,2026-01-17,Braai supplies,REGULAR
+60.00,Utilities,2026-01-18,Water bill,REGULAR
+90.00,Groceries,2026-01-20,Spar midweek shop,REGULAR
+35.00,Food & Drink,2026-01-22,Wimpy breakfast,REGULAR
+75.00,Shopping,2026-01-24,Phone case and screen protector,REGULAR
+28.00,Health,2026-01-25,Pharmacy - sunscreen,REGULAR
+115.00,Groceries,2026-01-28,Woolworths shop,REGULAR
+40.00,Food & Drink,2026-01-30,Pizza night,REGULAR
+88.00,Groceries,2026-02-01,Woolworths weekly shop,REGULAR
+45.00,Transport,2026-02-02,Uber rides x3,REGULAR
+120.00,Utilities,2026-02-03,Electricity prepaid,REGULAR
+15.00,Food & Drink,2026-02-04,Coffee and sandwich,REGULAR
+160.00,Groceries,2026-02-05,Checkers monthly shop,REGULAR
+35.00,Entertainment,2026-02-06,Movie tickets,REGULAR
+250.00,Education,2026-02-07,Textbook - Algorithms,REGULAR
+55.00,Transport,2026-02-09,Petrol,REGULAR
+30.00,Food & Drink,2026-02-10,Nandos lunch,REGULAR
+95.00,Groceries,2026-02-12,Pick n Pay,REGULAR
+65.00,Utilities,2026-02-13,Water bill,REGULAR
+150.00,Shopping,2026-02-14,Valentines gift,REGULAR
+42.00,Food & Drink,2026-02-15,Dinner date,REGULAR
+80.00,Groceries,2026-02-17,Spar shop,REGULAR
+28.00,Transport,2026-02-18,Bus fare,REGULAR
+35.00,Health,2026-02-20,Pharmacy - cold medicine,REGULAR
+110.00,Groceries,2026-02-22,Woolworths shop,REGULAR
+25.00,Food & Drink,2026-02-24,Steers takeaway,REGULAR
+60.00,Entertainment,2026-02-25,Live music event,REGULAR
+48.00,Transport,2026-02-27,Uber rides,REGULAR
+105.00,Groceries,2026-03-01,Woolworths shop,REGULAR
+115.00,Utilities,2026-03-02,Electricity prepaid,REGULAR
+35.00,Food & Drink,2026-03-03,Wimpy lunch,REGULAR
+60.00,Transport,2026-03-04,Petrol fill-up,REGULAR
+140.00,Groceries,2026-03-06,Checkers big shop,REGULAR
+45.00,Entertainment,2026-03-07,Streaming services,REGULAR
+28.00,Food & Drink,2026-03-08,Dominos pizza,REGULAR
+300.00,Education,2026-03-09,Semester textbooks,REGULAR
+88.00,Groceries,2026-03-12,Pick n Pay,REGULAR
+75.00,Utilities,2026-03-13,Water bill,REGULAR
+50.00,Shopping,2026-03-14,Gift for friend,REGULAR
+22.00,Transport,2026-03-15,Bus fare,REGULAR
+120.00,Groceries,2026-03-17,Woolworths shop,REGULAR
+38.00,Food & Drink,2026-03-18,Sushi takeaway,REGULAR
+30.00,Health,2026-03-20,Pharmacy - vitamins,REGULAR
+95.00,Groceries,2026-03-23,Spar shop,REGULAR
+55.00,Transport,2026-03-25,Petrol,REGULAR
+42.00,Food & Drink,2026-03-27,KFC family meal,REGULAR
+92.00,Groceries,2026-04-01,Woolworths weekly shop,REGULAR
+120.00,Utilities,2026-04-02,Electricity prepaid,REGULAR
+38.00,Transport,2026-04-03,Uber to interview,REGULAR
+145.00,Groceries,2026-04-04,Checkers monthly shop,REGULAR
+35.00,Food & Drink,2026-04-05,Mugg & Bean breakfast,REGULAR
+200.00,Education,2026-04-06,Online course - React,REGULAR
+55.00,Transport,2026-04-07,Petrol,REGULAR
+25.00,Entertainment,2026-04-08,Gaming subscription,REGULAR
+80.00,Groceries,2026-04-09,Pick n Pay,REGULAR
+42.00,Health,2026-04-11,Doctor visit co-pay,REGULAR
+110.00,Groceries,2026-04-13,Spar shop,REGULAR
+30.00,Food & Drink,2026-04-14,KFC family meal,REGULAR
+48.00,Transport,2026-04-15,Uber rides,REGULAR
+90.00,Shopping,2026-04-16,Books - 3 novels,REGULAR
+65.00,Utilities,2026-04-18,Water bill,REGULAR
+85.00,Groceries,2026-04-20,Woolworths shop,REGULAR
+28.00,Food & Drink,2026-04-22,Toasted sandwich shop,REGULAR
+35.00,Entertainment,2026-04-24,Board game night snacks,REGULAR
+85.50,Groceries,2026-05-01,Woolworths weekly shop,REGULAR
+42.00,Transport,2026-05-01,Uber to campus,REGULAR
+15.90,Food & Drink,2026-05-02,Coffee and sandwich,REGULAR
+120.00,Utilities,2026-05-02,Electricity prepaid,REGULAR
+35.00,Entertainment,2026-05-03,Movie tickets,REGULAR
+200.00,Groceries,2026-05-03,Checkers bulk buy,REGULAR
+55.00,Transport,2026-05-04,Petrol,REGULAR
+12.50,Food & Drink,2026-05-04,Lunch at Nandos,REGULAR
+89.99,Shopping,2026-05-05,New running shoes (sale),REGULAR
+25.00,Health,2026-05-05,Pharmacy - vitamins,REGULAR
+110.00,Groceries,2026-05-06,Pick n Pay,REGULAR
+30.00,Food & Drink,2026-05-07,Pizza night,REGULAR
+250.00,Education,2026-05-08,Textbook - Data Structures,REGULAR
+18.00,Transport,2026-05-08,Bus pass top-up,REGULAR
+95.00,Groceries,2026-05-09,Spar midweek shop,REGULAR
+60.00,Utilities,2026-05-10,Water bill,REGULAR
+75.00,Shopping,2026-05-10,Clothing - winter jacket,REGULAR
+22.00,Food & Drink,2026-05-11,Steers takeaway,REGULAR
+135.00,Groceries,2026-05-13,Woolworths shop,REGULAR
+28.00,Transport,2026-05-13,Uber rides x2,REGULAR
+65.00,Entertainment,2026-05-14,Concert ticket,REGULAR
+50.00,Food & Drink,2026-05-15,Dinner out with friends,REGULAR
+180.00,Shopping,2026-05-15,Electronics - USB hub and cables,REGULAR
+99.00,Groceries,2026-05-16,Checkers express,REGULAR
+15.00,Food & Drink,2026-05-17,Morning coffee run,REGULAR

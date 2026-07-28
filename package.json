@@ -1,0 +1,15 @@
+{
+  "name": "cv-website",
+  "version": "1.0.0",
+  "description": "Personal portfolio and CV website built with HTML, JavaScript, and Tailwind CSS.",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server --port=3000 --no-browser"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Demo</title>
+    <style>
+        html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
+        #screen { width: 100%; height: 100%; }
+    </style>
+    <script type="module" crossorigin="anonymous">
+        import RFB from './core/rfb.js';
+
+        function readParam(name, def) {
+            const m = document.location.href.match(new RegExp('[?&#]' + name + '=([^&#]*)'));
+            return m ? decodeURIComponent(m[1]) : def;
+        }
+
+        const host = readParam('host', window.location.hostname);
+        const port = readParam('port', window.location.port);
+        const path = readParam('path', 'websockify');
+        const proto = window.location.protocol === 'https:' ? 'wss' : 'ws';
+        const url = proto + '://' + host + (port ? ':' + port : '') + '/' + path;
+
+        const rfb = new RFB(document.getElementById('screen'), url);
+        rfb.scaleViewport = true;
+        rfb.resizeSession = false;
+    </script>
+</head>
+<body>
+    <div id="screen"></div>
+</body>
+</html>

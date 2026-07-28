@@ -1,0 +1,13 @@
+[Unit]
+Description=SSH tunnel to the demo host Docker socket
+After=network.target
+
+[Service]
+Type=simple
+User=YOUR_PI_USER
+ExecStart=/usr/bin/ssh -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 -o ExitOnForwardFailure=yes -NL 2375:/var/run/docker.sock YOUR_DEMO_USER@YOUR_DEMO_HOST
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
