@@ -38,7 +38,7 @@ async function init() {
   renderer.toneMappingExposure = 1.05;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
+  const camera = new THREE.PerspectiveCamera(28, 1, 4, 60);
   camera.position.set(0, 13, 17.5);
   camera.lookAt(0, 0, 0);
 
@@ -369,7 +369,7 @@ function buildBoard(pcb) {
   /* Shared materials */
   const steel = mat(0xc3c6cb, 0.9, 0.34);
   const steelDark = mat(0x8c9096, 0.9, 0.45);
-  const gold = mat(0xe0b55e, 1, 0.28);
+  const gold = mat(0xd9b062, 0.85, 0.42);
   const blackPlastic = mat(0x0d0d0f, 0, 0.55);
   const void_ = mat(0x020203, 0, 1);
   const chipBlack = mat(0x141518, 0.15, 0.42);
@@ -385,11 +385,11 @@ function buildBoard(pcb) {
   /* Mounting holes: plated rings */
   [[-W / 2 + 0.35, -D / 2 + 0.35], [-W / 2 + 0.35, D / 2 - 0.35], [W / 2 - 2.35, -D / 2 + 0.35], [W / 2 - 2.35, D / 2 - 0.35]]
     .forEach(([x, z]) => {
-      const ring = add(new THREE.RingGeometry(0.14, 0.31, 32), gold, x, top + 0.002, z);
+      const ring = add(new THREE.RingGeometry(0.14, 0.31, 32), gold, x, top + 0.004, z);
       ring.rotation.x = -Math.PI / 2;
       const hole = add(new THREE.CylinderGeometry(0.14, 0.14, T + 0.01, 24, 1, true), void_, x, 0, z);
       hole.material = new THREE.MeshStandardMaterial({ color: 0x020202, side: THREE.BackSide });
-      const cap = add(new THREE.CircleGeometry(0.14, 24), void_, x, top + 0.003, z);
+      const cap = add(new THREE.CircleGeometry(0.14, 24), void_, x, top + 0.006, z);
       cap.rotation.x = -Math.PI / 2;
     });
 
@@ -518,7 +518,7 @@ function buildBoard(pcb) {
     const n = Math.floor(len / 0.1);
     for (let i = 0; i < n; i++) {
       const o = -len / 2 + 0.05 + i * 0.1;
-      box(alongX ? 0.03 : 0.12, 0.01, alongX ? 0.12 : 0.03, gold, x + (alongX ? o : -0.2), top + 0.005, z + (alongX ? -0.2 : o));
+      box(alongX ? 0.03 : 0.12, 0.01, alongX ? 0.12 : 0.03, gold, x + (alongX ? o : -0.2), top + 0.008, z + (alongX ? -0.2 : o));
     }
   };
   ribbon(2.2, false, -3.85, 0.3);
@@ -547,8 +547,8 @@ function buildBoard(pcb) {
   ];
   const free = (x, z) => !keepOut.some(([x0, x1, z0, z1]) => x > x0 - 0.04 && x < x1 + 0.04 && z > z0 - 0.04 && z < z1 + 0.04);
   const MAX = 520;
-  const bodies = new THREE.InstancedMesh(new THREE.BoxGeometry(0.06, 0.04, 0.05), mat(0xffffff, 0.1, 0.55), MAX);
-  const caps = new THREE.InstancedMesh(new THREE.BoxGeometry(0.025, 0.042, 0.052), mat(0xd6d0c2, 0.9, 0.3), MAX * 2);
+  const bodies = new THREE.InstancedMesh(new THREE.BoxGeometry(0.06, 0.04, 0.05), mat(0xffffff, 0.1, 0.6), MAX);
+  const caps = new THREE.InstancedMesh(new THREE.BoxGeometry(0.024, 0.048, 0.058), mat(0xa9a397, 0.45, 0.55), MAX * 2);
   const c = new THREE.Color();
   const q = new THREE.Quaternion();
   const up = new THREE.Vector3(0, 1, 0);
@@ -559,14 +559,14 @@ function buildBoard(pcb) {
     if (n >= MAX || !free(x, z)) return;
     q.setFromAxisAngle(up, turn ? Math.PI / 2 : 0);
     const scale = new THREE.Vector3(s, 1, s);
-    m4.compose(new THREE.Vector3(x, top + 0.02, z), q, scale);
+    m4.compose(new THREE.Vector3(x, top + 0.022, z), q, scale);
     bodies.setMatrixAt(n, m4);
     const tone = rnd();
     bodies.setColorAt(n, c.set(tone < 0.55 ? 0x8a7454 : tone < 0.85 ? 0x1b1a18 : 0x3a3a36));
-    const off = 0.042 * s;
+    const off = 0.03 * s;
     [-1, 1].forEach((side, k) => {
       const ox = turn ? 0 : side * off, oz = turn ? side * off : 0;
-      m4.compose(new THREE.Vector3(x + ox, top + 0.021, z + oz), q, scale);
+      m4.compose(new THREE.Vector3(x + ox, top + 0.025, z + oz), q, scale);
       caps.setMatrixAt(n * 2 + k, m4);
     });
     n++;
