@@ -25,7 +25,7 @@
         { name: 'HTMX', level: 85, note: 'Server-driven UI without a SPA' },
         { name: 'templ', level: 80, note: 'Type-safe Go HTML templates' },
         { name: 'Alpine.js', level: 75, note: 'Lightweight client-side interactivity' },
-        { name: 'React', level: 65, note: 'Analytics dashboards' }
+        { name: 'React', level: 65, note: 'FIT@NWU analytics dashboards' }
       ]
     },
     {
@@ -55,39 +55,35 @@
   const PROJECTS = [
     {
       id: 'automation',
-      title: 'Data automation platform',
-      year: 'Client work, 2026 to now',
-      blurb: 'A production PHP and MySQL platform that uses AI to automate data processing that used to be done by hand.',
-      tags: ['PHP', 'MySQL', 'OpenAI API', 'Tailwind'],
+      title: 'SLS Consultants',
+      year: 'WaltWorks, 2026 to now',
+      blurb: 'A production platform for SLS Consultants that uses AI to take hours of manual data work off their team.',
+      tags: ['PHP', 'MySQL', 'AI'],
       detail: [
-        'A production platform for a professional services client, built on PHP 8.3 with strict types and MySQL 8, deployed to Nginx and PHP-FPM on Ubuntu.',
-        'I work on it across the full stack: database schema and migrations, the service layer, and the front end on top. The OpenAI API automates processing that would otherwise be manual.'
+        'A production platform built for SLS Consultants at WaltWorks. It uses AI to automate data work their team used to do by hand.',
+        'I work on it across the full stack, from the database through to the interface their team uses every day.'
       ],
       points: [
-        'PHP 8.3 with strict types, organised as controllers, services and models',
-        'MySQL 8 schema design with versioned migrations',
-        'OpenAI API integration for automated data processing',
-        'Tailwind front end with vanilla JavaScript, no SPA framework',
-        'Deployed to Nginx and PHP-FPM on Ubuntu'
+        'Full-stack ownership of features, from database to interface',
+        'AI-assisted automation of previously manual work',
+        'Running in production since 2026'
       ]
     },
     {
       id: 'portals',
-      title: 'Serverless portal suite',
-      year: 'Client work, 2025 to 2026',
-      blurb: 'Eleven serverless portals on one shared Go codebase, server-rendered with templ and HTMX instead of a SPA framework.',
-      tags: ['Go', 'AWS Lambda', 'HTMX', 'PostgreSQL'],
+      title: 'Potatoes South Africa',
+      year: 'WaltWorks, 2025 to 2026',
+      blurb: 'Eleven web portals for Potatoes South Africa, running serverless on AWS from one shared Go codebase.',
+      tags: ['Go', 'AWS Lambda', 'HTMX'],
       detail: [
-        'A suite of eleven web portals for a large membership organisation, each a standalone AWS SAM deployment sharing a common Go package. Go with Echo and templ on the backend, HTMX and Alpine.js on the front end, PostgreSQL underneath with SQLC generating the query layer.',
-        'My work ran across most of the portals, from database migrations and service logic through to the interface.'
+        'A suite of eleven web portals built for Potatoes South Africa at WaltWorks, running serverless on AWS Lambda.',
+        'I built features across most of the portals, from the data layer through to the pages their members and staff use.'
       ],
       points: [
-        'Eleven standalone AWS SAM deployments sharing one Go package',
-        'Multi-step verification flows with document upload, approval and rejection paths',
-        'Reporting dashboards with aggregated figures and monitoring views',
-        'Group messaging with a cross-portal notification system',
-        'Third-party accounting integration and automated email reports',
-        'Type-safe query layer generated with SQLC, plus database migrations'
+        'Eleven portals sharing one Go codebase',
+        'Serverless on AWS Lambda, scaling with demand',
+        'Server-rendered pages for a fast, light front end',
+        'Dashboards, reporting and member-facing workflows'
       ]
     },
     {
@@ -128,9 +124,9 @@
     },
     {
       id: 'gym',
-      title: 'Gym management platform',
+      title: 'FIT@NWU',
       year: 'University team project',
-      blurb: 'Bookings, member management and React analytics dashboards for a campus gym.',
+      blurb: 'Bookings, member management and React analytics dashboards for the North-West University gym.',
       tags: ['React', 'MySQL', 'MongoDB'],
       detail: [
         'A gym management application covering the whole member lifecycle: sign-up, class and equipment bookings, and the analytics staff need to run the facility.',

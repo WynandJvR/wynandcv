@@ -50,13 +50,13 @@
       run() {
         printLines([
           '<span class="c-text">Wynand Janse van Rensburg</span>',
-          '<span class="c-dim">Full-stack developer</span>',
+          '<span class="c-dim">Full-stack Developer at WaltWorks</span>',
           '',
           'I build client platforms end to end. Since 2025 I have shipped into two',
-          'production systems: a suite of eleven serverless Go portals on AWS Lambda,',
-          'and a PHP platform that uses AI to automate manual data processing.',
+          'production systems: eleven serverless portals for Potatoes South Africa,',
+          'and a platform for SLS Consultants that uses AI to automate manual work.',
           '',
-          'BSc Information Technology, 2025.',
+          'BSc Information Technology, North-West University, 2025.',
           '',
           '<span class="c-dim">Try:</span> <span class="c-accent">skills</span>, <span class="c-accent">projects</span>, <span class="c-accent">stats</span>, <span class="c-accent">contact</span>'
         ]);
@@ -67,7 +67,7 @@
       desc: 'Background and current work',
       run() {
         printLines([
-          'Full-stack developer since 2025.',
+          'Full-stack developer at WaltWorks since 2025.',
           '',
           'I work across the whole stack: database schema and migrations, backend services',
           'and APIs, and the front end sitting on top of them. Day to day that means Go on',
@@ -143,10 +143,10 @@
       desc: 'Education and milestones',
       run() {
         printTable([
-          ['2025-now', 'Full-stack developer, client platforms'],
-          ['2026-now', 'Data automation platform (PHP 8.3, MySQL, OpenAI API)'],
-          ['2025-26', 'Serverless portal suite (Go, templ, HTMX, AWS Lambda)'],
-          ['2023-25', 'BSc Information Technology'],
+          ['2025-now', 'Full-stack Developer at WaltWorks'],
+          ['2026-now', 'SLS Consultants platform (PHP, MySQL, AI)'],
+          ['2025-26', 'Potatoes South Africa portals (Go, AWS Lambda)'],
+          ['2023-25', 'BSc Information Technology, North-West University'],
           ['Ongoing', 'Self-hosted infrastructure on Linux, Docker and Raspberry Pi']
         ]);
       }
