@@ -191,9 +191,8 @@ h1, h2, h3 { line-height: 1; font-weight: 800; }
 .callout {
   position: absolute; top: 0; left: 0; pointer-events: none; will-change: transform;
   display: grid; gap: 0.1rem; padding-left: 0.75rem; border-left: 1px solid rgba(255, 255, 255, 0.35);
-  opacity: 0; transition: opacity 600ms var(--ease);
+  opacity: 0;
 }
-.machine.is-ready .callout { opacity: 1; }
 .callout.is-left { transform-origin: right; translate: -100% 0; padding-left: 0; padding-right: 0.75rem; border-left: 0; border-right: 1px solid rgba(255, 255, 255, 0.35); text-align: right; }
 .callout { text-shadow: 0 1px 12px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.8); }
 .callout__k { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
@@ -262,7 +261,17 @@ h1, h2, h3 { line-height: 1; font-weight: 800; }
   font-family: var(--font-display); font-weight: 800; font-stretch: 112%;
   font-size: var(--step-3); line-height: 0.95; letter-spacing: -0.035em;
 }
-.panel__line { margin-top: 1.25rem; font-size: var(--step-1); color: var(--text-2); max-width: 32ch; line-height: 1.45; }
+.panel__line { margin-top: 1.25rem; font-size: var(--step-1); color: var(--text); max-width: 34ch; line-height: 1.45; }
+.panel__facts {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem;
+  margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); max-width: 34rem;
+}
+.panel__facts li { display: grid; gap: 0.35rem; align-content: start; }
+.panel__facts b {
+  font-family: var(--font-display); font-weight: 800; font-stretch: 112%;
+  font-size: 1.05rem; letter-spacing: -0.01em; color: var(--hot-2);
+}
+.panel__facts span { font-size: var(--step--1); line-height: 1.45; color: var(--text-2); }
 .panel__stack { margin-top: 1.5rem; font-family: var(--font-mono); font-size: var(--step--2); color: var(--text-3); letter-spacing: 0.02em; }
 .panel__stack span { color: var(--text-2); }
 .panel__more {
@@ -566,6 +575,8 @@ h1, h2, h3 { line-height: 1; font-weight: 800; }
   .panel { grid-template-columns: minmax(0, 1fr); min-height: 0; gap: 2rem; }
   .panel--flip .panel__copy { order: 0; }
   .panel__n { font-size: 4.5rem; margin-bottom: 1rem; }
+  .panel__facts { grid-template-columns: minmax(0, 1fr); gap: 0.9rem; }
+  .panel__facts li { grid-template-columns: 7.5rem 1fr; gap: 1rem; align-items: baseline; }
   .hero__hint { display: none; }
 }
 

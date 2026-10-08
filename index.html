@@ -115,7 +115,7 @@
     <canvas id="machine-canvas" aria-label="A 3D model of the Raspberry Pi serving this page, driven by its live readings"></canvas>
     <svg class="machine__lines" id="machine-lines" aria-hidden="true"><path/></svg>
 
-    <div class="callout" data-anchor="soc" data-dir="left" data-lift="180" >
+    <div class="callout" data-anchor="soc">
       <span class="callout__k">SoC</span>
       <span class="callout__v"><span data-stat="temp">–</span><small>°C</small></span>
       <span class="callout__s">CPU <span data-stat="cpu">–</span>% · load <span data-stat="load">–</span></span>
@@ -128,7 +128,7 @@
       <span class="callout__k">Ethernet</span>
       <span class="callout__v callout__v--sm" data-live="on"><i></i>serving you</span>
     </div>
-    <div class="callout" data-anchor="power" data-lift="-30" >
+    <div class="callout" data-anchor="power">
       <span class="callout__k">Uptime</span>
       <span class="callout__v"><span data-stat="days">–</span><small>days</small></span>
     </div>
@@ -154,7 +154,12 @@
     <div class="panel__copy">
       <p class="panel__n">01</p>
       <h2 class="panel__title">Data, automated</h2>
-      <p class="panel__line">A production platform that turns hours of manual data work into an AI pipeline.</p>
+      <p class="panel__line">Data work that used to take people hours, now handled by an AI-assisted pipeline running in production.</p>
+      <ul class="panel__facts">
+        <li><b>End to end</b><span>Schema, services and interface, all mine to build</span></li>
+        <li><b>OpenAI API</b><span>Wired into the processing flow, not bolted on</span></li>
+        <li><b>PHP 8.3</b><span>Strict types, layered services, MySQL 8 on Nginx</span></li>
+      </ul>
       <p class="panel__stack">PHP 8.3 · MySQL · OpenAI API · <span>Client work, 2026 to now</span></p>
       <button class="panel__more" data-open="automation">The detail <span aria-hidden="true">→</span></button>
     </div>
@@ -192,7 +197,12 @@
     <div class="panel__copy">
       <p class="panel__n">02</p>
       <h2 class="panel__title">Eleven portals, one&nbsp;codebase</h2>
-      <p class="panel__line">A serverless suite on AWS Lambda, server-rendered in Go.</p>
+      <p class="panel__line">Eleven independent web portals on AWS Lambda, all built from one shared Go package.</p>
+      <ul class="panel__facts">
+        <li><b>11 deploys</b><span>Each portal ships on its own with AWS SAM</span></li>
+        <li><b>No SPA</b><span>Server-rendered with templ and HTMX, fast by default</span></li>
+        <li><b>Type-safe SQL</b><span>Queries generated with SQLC on PostgreSQL</span></li>
+      </ul>
       <p class="panel__stack">Go · AWS Lambda · HTMX · PostgreSQL · <span>Client work, 2025 to 2026</span></p>
       <button class="panel__more" data-open="portals">The detail <span aria-hidden="true">→</span></button>
     </div>
@@ -205,7 +215,12 @@
     <div class="panel__copy">
       <p class="panel__n">03</p>
       <h2 class="panel__title">Expense Tracker</h2>
-      <p class="panel__line">A real desktop app. Click run and it opens in your browser.</p>
+      <p class="panel__line">A JavaFX app that reads your receipts. Press run and a real copy boots just for you.</p>
+      <ul class="panel__facts">
+        <li><b>OCR</b><span>Pulls totals straight off receipt photos</span></li>
+        <li><b>Budgets</b><span>Per-category limits with spending charts</span></li>
+        <li><b>Live</b><span>Your own container, ten minutes, no install</span></li>
+      </ul>
       <p class="panel__stack">Java · JavaFX · OCR · <span>Personal project</span></p>
       <div class="panel__demo" id="demo-cards"></div>
     </div>
@@ -230,7 +245,12 @@
     <div class="panel__copy">
       <p class="panel__n">04</p>
       <h2 class="panel__title">On-demand containers</h2>
-      <p class="panel__line">The demo above, built from scratch on my own hardware.</p>
+      <p class="panel__line">The system behind that run button: the Pi asks a second machine for a fresh container and streams its screen to you.</p>
+      <ul class="panel__facts">
+        <li><b>Isolated</b><span>One disposable container per visitor</span></li>
+        <li><b>Locked down</b><span>Docker over an SSH tunnel, no open ports</span></li>
+        <li><b>Self-cleaning</b><span>Sessions expire and delete themselves</span></li>
+      </ul>
       <p class="panel__stack">Node.js · Docker · Tailscale · <span>Self-hosted</span></p>
       <button class="panel__more" data-open="homelab">The detail <span aria-hidden="true">→</span></button>
     </div>
