@@ -67,10 +67,10 @@ COPY startup.sh /startup.sh
 COPY vnc_embed.html /usr/share/novnc/vnc_embed.html
 RUN chmod +x /startup.sh
 
-# Create app data directory and seed with demo data
-RUN mkdir -p /home/demouser/.expenseTracker
-COPY seed-data/ /home/demouser/.expenseTracker/
-RUN chown -R demouser:demouser /home/demouser /app
+# Demo data is generated at container start (seed.py), so it always ends today
+RUN apt-get update && apt-get install -y --no-install-recommends python3-minimal     && rm -rf /var/lib/apt/lists/*
+COPY seed.py /seed.py
+RUN mkdir -p /home/demouser/.expenseTracker     && chown -R demouser:demouser /home/demouser /app
 
 EXPOSE 6080
 

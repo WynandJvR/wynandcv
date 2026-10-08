@@ -46,6 +46,9 @@ if [ -z "$JAR_FILE" ]; then
     exit 1
 fi
 
+# Fresh, realistic data ending today: a full year of history, bills, goals and a loan
+python3 /seed.py "$HOME/.expenseTracker/profiles/Default"
+
 echo "Starting ExpenseTracker: $JAR_FILE"
 
 # Create performance override CSS (disable drop shadows and animations)

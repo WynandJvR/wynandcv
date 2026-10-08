@@ -1,9 +1,0 @@
-Groceries,800.00
-Transport,200.00
-Rent,6000.00
-Food & Drink,300.00
-Utilities,250.00
-Entertainment,150.00
-Shopping,200.00
-Education,400.00
-Health,150.00
