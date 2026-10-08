@@ -15,10 +15,23 @@ function webglAvailable() {
   } catch (e) { return false; }
 }
 
-if (stage && canvas && webglAvailable()) init();
-else if (stage) stage.classList.add('is-static');
+/* Build the scene after the page has painted, so the text appears at once and
+   the heavier work (textures, geometry) happens while the visitor reads. */
+function start() {
+  const go = () => init();
+  if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 600 });
+  else setTimeout(go, 60);
+}
+if (stage && canvas && webglAvailable()) {
+  if (document.readyState === 'complete') start();
+  else window.addEventListener('load', start, { once: true });
+}
+if (stage && !(canvas && webglAvailable())) stage.classList.add('is-static');
 
-function init() {
+async function init() {
+  // Yield to the browser between the heavy steps so input stays responsive
+  const breathe = () => new Promise((r) => setTimeout(r, 0));
+  const small = window.innerWidth < 760;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -30,6 +43,9 @@ function init() {
   camera.lookAt(0, 0, 0);
 
   scene.environment = buildEnvironment(renderer);
+  await breathe();
+  const pcb = pcbTextures(small ? 1024 : 2048);
+  await breathe();
 
   /* Lights */
   scene.add(new THREE.AmbientLight(0x404650, 0.6));
@@ -42,7 +58,8 @@ function init() {
 
   /* Board */
   const pi = new THREE.Group();
-  const board = buildBoard();
+  const board = buildBoard(pcb);
+  await breathe();
   pi.add(board.group);
   scene.add(pi);
 
@@ -206,6 +223,9 @@ function init() {
   let elapsed = 0;
   let scrollP = 0;
   let slowFrames = 0, sampled = 0;
+  // Compile shaders off the main thread where supported, before the first frame
+  try { if (renderer.compileAsync) await renderer.compileAsync(scene, camera); } catch (e) { /* first render compiles */ }
+  await breathe();
   stage.classList.add('is-ready');
 
   function frame() {
@@ -329,7 +349,7 @@ function init() {
 /* Units: 1 = 10mm. Board is 85 x 56mm. x runs along the long edge, z towards
    the viewer. Ports are on the right edge, the GPIO header on the far edge.
    The layout follows a real Pi 4 Model B closely enough to read as one. */
-function buildBoard() {
+function buildBoard(pcb) {
   const group = new THREE.Group();
   const W = 8.5, D = 5.6, T = 0.14;
   const top = T / 2;
@@ -355,7 +375,6 @@ function buildBoard() {
   const chipBlack = mat(0x141518, 0.15, 0.42);
 
   /* PCB */
-  const pcb = pcbTextures();
   const traceMat = new THREE.MeshStandardMaterial({
     map: pcb.map, emissiveMap: pcb.emissive, emissive: new THREE.Color(0xffc27a),
     emissiveIntensity: 0.04, metalness: 0.15, roughness: 0.55,
@@ -753,8 +772,8 @@ function shieldTexture() {
 
 /* The board's surface: solder mask, copper traces, vias, pads, the antenna
    and silkscreen. Also returns an emissive map (traces only) and a bump map. */
-function pcbTextures() {
-  const W = 2048, H = Math.round(2048 * 5.6 / 8.5);
+function pcbTextures(size) {
+  const W = size, H = Math.round(size * 5.6 / 8.5);
   const make = () => { const c = document.createElement('canvas'); c.width = W; c.height = H; return c; };
   const base = make(), glow = make(), bump = make();
   const b = base.getContext('2d'), g = glow.getContext('2d'), u = bump.getContext('2d');
