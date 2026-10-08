@@ -6,7 +6,7 @@ const http = require('http');
 
 const app = express();
 const REMOTE_HOST = process.env.DEMO_REMOTE_HOST || '127.0.0.1'; // demo host, set in the systemd unit
-const docker = new Docker({ host: '127.0.0.1', port: 2375 }); // SSH tunnel to ThinkCentre docker.sock
+const docker = new Docker({ host: '127.0.0.1', port: 2375 }); // SSH tunnel to the demo host's docker.sock
 const PORT = process.env.PORT || 3001;
 const SESSION_TIMEOUT = 10 * 60 * 1000; // 10 minutes
 const CONTAINER_NAME = 'demo-session';
@@ -79,18 +79,32 @@ app.use(
 // --- API Routes ---
 
 // Get current demo status
-app.get('/demo/status', (req, res) => {
+app.get('/demo/status', async (req, res) => {
   if (!activeSession) {
-    return res.json({ active: false });
+    return res.json({ active: false, hostOnline: await hostOnline() });
   }
   const elapsed = Date.now() - activeSession.startTime;
   const remaining = Math.max(0, Math.ceil((SESSION_TIMEOUT - elapsed) / 1000));
   res.json({
     active: true,
+    hostOnline: true,
     project: activeSession.project,
     remainingSeconds: remaining,
   });
 });
+
+// Whether the demo host's Docker API answers through the tunnel. Cached briefly
+// so a page full of visitors does not hammer the tunnel.
+let hostCheck = { at: 0, ok: false };
+async function hostOnline() {
+  if (Date.now() - hostCheck.at < 15000) return hostCheck.ok;
+  const ok = await Promise.race([
+    docker.ping().then(() => true, () => false),
+    new Promise((resolve) => setTimeout(() => resolve(false), 2500)),
+  ]);
+  hostCheck = { at: Date.now(), ok };
+  return ok;
+}
 
 // Start a demo session
 app.post('/demo/start', async (req, res) => {
@@ -114,6 +128,10 @@ app.post('/demo/start', async (req, res) => {
     const elapsed = Date.now() - activeSession.startTime;
     const remaining = Math.max(0, Math.ceil((SESSION_TIMEOUT - elapsed) / 1000));
     return res.status(409).json({ error: 'busy', remainingSeconds: remaining });
+  }
+
+  if (!(await hostOnline())) {
+    return res.status(503).json({ error: 'offline', message: 'The demo machine is offline right now. Please try again later.' });
   }
 
   const config = PROJECT_IMAGES[project];

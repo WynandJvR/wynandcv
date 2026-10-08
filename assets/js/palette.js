@@ -26,9 +26,7 @@
     const out = [];
 
     [
-      ['Home', 'home'], ['About', 'objective'], ['Journey & education', 'education'],
-      ['Skills', 'skills'], ['Projects', 'projects'], ['Live demos', 'demos'],
-      ['Server telemetry', 'pi-stats'], ['Contact', 'contact']
+      ['Home', 'home'], ['Work', 'work'], ['Live demo', 'demo'], ['Contact', 'contact']
     ].forEach(([label, id]) => {
       out.push({ group: 'Navigate', label, icon: ICON.jump, hint: '#' + id, run: () => window.Site.scrollTo('#' + id) });
     });
@@ -48,7 +46,6 @@
     });
 
     out.push(
-      { group: 'Actions', label: 'Toggle light / dark theme', icon: ICON.theme, hint: 'theme', run: () => window.Site.toggleTheme() },
       { group: 'Actions', label: 'Open the terminal', icon: ICON.term, hint: 'Ctrl `', run: () => window.Site.openConsole('shell') },
       { group: 'Actions', label: 'Open the live log', icon: ICON.term, hint: 'logs', run: () => window.Site.openConsole('logs') },
       { group: 'Actions', label: 'Copy email address', icon: ICON.copy, hint: 'clipboard', run: () => window.Site.copyEmail() },

@@ -1,20 +1,12 @@
-/* content.js: skills explorer, project grid, filters and detail sheet */
+/* content.js: toolkit, work list and project detail sheet */
 (function () {
   'use strict';
 
   /* Skill data */
-  const ICON = {
-    code: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 18l-5-6 5-6M15 6l5 6-5 6"/>',
-    globe: '<circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/>',
-    db: '<ellipse cx="12" cy="6" rx="8" ry="3"/><path stroke-linecap="round" d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>',
-    server: '<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path stroke-linecap="round" d="M7 7.5h.01M7 16.5h.01"/>'
-  };
-
   const SKILL_GROUPS = [
     {
       id: 'languages',
       name: 'Languages',
-      icon: 'code',
       skills: [
         { name: 'Go', level: 85, note: 'Serverless portals, AWS Lambda handlers' },
         { name: 'PHP', level: 85, note: 'Production 8.3 platform, front to back' },
@@ -27,20 +19,18 @@
     {
       id: 'web',
       name: 'Web & Frontend',
-      icon: 'globe',
       skills: [
         { name: 'HTML & CSS', level: 90, note: 'Hand-written design systems' },
         { name: 'Tailwind CSS', level: 85, note: 'Used across every client platform' },
         { name: 'HTMX', level: 85, note: 'Server-driven UI without a SPA' },
         { name: 'templ', level: 80, note: 'Type-safe Go HTML templates' },
         { name: 'Alpine.js', level: 75, note: 'Lightweight client-side interactivity' },
-        { name: 'React', level: 65, note: 'FIT@NWU analytics dashboards' }
+        { name: 'React', level: 65, note: 'Analytics dashboards' }
       ]
     },
     {
       id: 'data',
       name: 'Data & Storage',
-      icon: 'db',
       skills: [
         { name: 'PostgreSQL', level: 85, note: 'Schema design, migrations, reporting' },
         { name: 'MySQL', level: 85, note: 'Primary store on a production platform' },
@@ -51,7 +41,6 @@
     {
       id: 'infra',
       name: 'Cloud & Infrastructure',
-      icon: 'server',
       skills: [
         { name: 'AWS Lambda', level: 80, note: 'Eleven portals running serverless' },
         { name: 'AWS SAM', level: 75, note: 'Infrastructure as code and deploys' },
@@ -63,24 +52,16 @@
     }
   ];
 
-  const MARQUEE = [
-    'Go', 'PHP', 'JavaScript', 'Java', 'Python', 'C#', 'Echo', 'templ', 'HTMX',
-    'Alpine.js', 'Tailwind', 'React', 'Node.js', 'PostgreSQL', 'MySQL', 'SQLC',
-    'MongoDB', 'AWS Lambda', 'AWS SAM', 'S3', 'OpenAI API', 'Nginx', 'Linux',
-    'Docker', 'Git', 'Raspberry Pi'
-  ];
-
   const PROJECTS = [
     {
-      id: 'sls',
-      title: 'SLS Consultants Platform',
-      year: 'WaltWorks, 2026 to present',
-      icon: 'db',
-      blurb: 'PHP and MySQL platform for SLS Consultants with AI-assisted data processing, built across the full stack.',
+      id: 'automation',
+      title: 'Data automation platform',
+      year: 'Client work, 2026 to now',
+      blurb: 'A production PHP and MySQL platform that uses AI to automate data processing that used to be done by hand.',
       tags: ['PHP', 'MySQL', 'OpenAI API', 'Tailwind'],
       detail: [
-        'A production platform for SLS Consultants, built on PHP 8.3 with strict types and MySQL 8, deployed to Nginx and PHP-FPM on Ubuntu.',
-        'I work on it across the full stack: database schema and migrations, the service layer, and the Tailwind front end on top. The OpenAI API is used to automate processing that would otherwise be manual.'
+        'A production platform for a professional services client, built on PHP 8.3 with strict types and MySQL 8, deployed to Nginx and PHP-FPM on Ubuntu.',
+        'I work on it across the full stack: database schema and migrations, the service layer, and the front end on top. The OpenAI API automates processing that would otherwise be manual.'
       ],
       points: [
         'PHP 8.3 with strict types, organised as controllers, services and models',
@@ -91,14 +72,13 @@
       ]
     },
     {
-      id: 'psa',
-      title: 'PSA Serverless Portals',
-      year: 'WaltWorks, 2025 to 2026',
-      icon: 'server',
-      blurb: 'Eleven serverless Go portals for Potatoes South Africa on AWS Lambda, server-rendered with templ and HTMX instead of a SPA framework.',
+      id: 'portals',
+      title: 'Serverless portal suite',
+      year: 'Client work, 2025 to 2026',
+      blurb: 'Eleven serverless portals on one shared Go codebase, server-rendered with templ and HTMX instead of a SPA framework.',
       tags: ['Go', 'AWS Lambda', 'HTMX', 'PostgreSQL'],
       detail: [
-        'A suite of serverless applications for Potatoes South Africa, each portal a standalone AWS SAM deployment sharing a common Go package. The stack is Go with Echo and templ on the backend, HTMX and Alpine.js on the front end, and PostgreSQL underneath with SQLC generating the query layer.',
+        'A suite of eleven web portals for a large membership organisation, each a standalone AWS SAM deployment sharing a common Go package. Go with Echo and templ on the backend, HTMX and Alpine.js on the front end, PostgreSQL underneath with SQLC generating the query layer.',
         'My work ran across most of the portals, from database migrations and service logic through to the interface.'
       ],
       points: [
@@ -106,18 +86,15 @@
         'Multi-step verification flows with document upload, approval and rejection paths',
         'Reporting dashboards with aggregated figures and monitoring views',
         'Group messaging with a cross-portal notification system',
-        'Third-party accounting integration and a task and project dashboard',
-        'Automated templated HTML email reporting',
-        'Type-safe query layer generated with SQLC, plus database migrations',
-        'Shared toast notification system and dark mode across the suite'
+        'Third-party accounting integration and automated email reports',
+        'Type-safe query layer generated with SQLC, plus database migrations'
       ]
     },
     {
       id: 'expensetracker',
       title: 'Expense Tracker',
       year: 'Personal project',
-      icon: 'chart',
-      blurb: 'JavaFX desktop app with receipt OCR, budgets, category management and spending analytics. Runnable live below.',
+      blurb: 'JavaFX desktop app with receipt OCR, budgets and spending analytics. Runnable live on this page.',
       tags: ['Java', 'JavaFX', 'OCR'],
       demo: 'expensetracker',
       github: 'https://github.com/WynandJvR/ExpenseTracker',
@@ -133,252 +110,105 @@
       ]
     },
     {
-      id: 'fitnwu',
-      title: 'FIT@NWU Fitness Platform',
-      year: 'University project',
-      icon: 'globe',
-      blurb: 'Gym management platform with React analytics dashboards, bookings and member management.',
+      id: 'homelab',
+      title: 'On-demand containers',
+      year: 'Self-hosted',
+      blurb: 'A Node service that starts a disposable Docker container per visitor and streams the app into the browser.',
+      tags: ['Node.js', 'Docker', 'Linux'],
+      detail: [
+        'Showing someone a desktop app usually means asking them to clone a repo and install a JDK. I wanted a button instead.',
+        'A Node service on the Pi receives the request, starts a disposable container on a second machine, and streams its screen into the browser. Sessions are single-tenant and time-boxed, and the container is destroyed afterwards.'
+      ],
+      points: [
+        'Docker API reached over an SSH tunnel, never an exposed TCP socket',
+        'One session at a time with automatic expiry and cleanup',
+        'Containers seeded with realistic sample data so the demo is useful immediately',
+        'Reports the demo machine as offline instead of failing silently'
+      ]
+    },
+    {
+      id: 'gym',
+      title: 'Gym management platform',
+      year: 'University team project',
+      blurb: 'Bookings, member management and React analytics dashboards for a campus gym.',
       tags: ['React', 'MySQL', 'MongoDB'],
       detail: [
-        'FIT@NWU is a gym management application covering the whole member lifecycle: sign-up, class and equipment bookings, and the analytics staff need to run the facility.',
-        'The frontend is React, with a hybrid data layer. MySQL holds the relational core (members, bookings), MongoDB holds the parts where the data needed to stay flexible.'
+        'A gym management application covering the whole member lifecycle: sign-up, class and equipment bookings, and the analytics staff need to run the facility.',
+        'React on the front end with a hybrid data layer: MySQL for the relational core, MongoDB where the data needed to stay flexible.'
       ],
       points: [
         'React dashboards visualising attendance and facility usage',
         'Booking system with availability handling and conflict prevention',
         'Member management across MySQL and MongoDB',
-        'Built as a team project under real deadline pressure'
+        'Built as a team under real deadline pressure'
       ]
     },
     {
       id: 'bombfinder',
       title: 'Bomb Finder',
       year: 'Personal project',
-      icon: 'game',
-      blurb: 'A Minesweeper-style game in Java with grid generation, flood-fill reveal logic and a clean desktop GUI.',
+      blurb: 'A Minesweeper-style game in Java with grid generation and flood-fill reveal logic.',
       tags: ['Java', 'Game Dev', 'GUI'],
       detail: [
-        'A Minesweeper clone written in Java. The recursive flood-fill reveal and the bomb-adjacency counting are both easy to get subtly wrong, which made it a useful exercise.',
-        'Wrapped in a straightforward GUI with the usual flagging, timing and difficulty options.'
+        'A Minesweeper clone written in Java. The recursive flood-fill reveal and the adjacency counting are both easy to get subtly wrong, which made it a useful exercise.'
       ],
       points: [
-        'Randomised grid generation with guaranteed-solvable openings',
+        'Randomised grid generation with safe openings',
         'Recursive flood-fill reveal for empty regions',
-        'Adjacency counting and flagging mechanics',
-        'Desktop GUI built around the game loop'
+        'Adjacency counting and flagging mechanics'
       ]
     },
     {
       id: 'portfolio',
-      title: 'This Portfolio',
+      title: 'This site',
       year: 'Ongoing',
-      icon: 'code',
-      blurb: 'Hand-built with zero frameworks: canvas constellation, command palette, an in-page shell and live server telemetry.',
-      tags: ['JavaScript', 'CSS', 'Canvas'],
+      blurb: 'No frameworks, served from a Raspberry Pi, with a 3D model of that Pi driven by its live readings.',
+      tags: ['JavaScript', 'three.js', 'nginx'],
       github: 'https://github.com/WynandJvR/wynandcv',
       detail: [
-        'Everything here is hand-written. No Tailwind build, no React, no component library, just a CSS design system built on custom properties and vanilla JavaScript modules.',
-        'It has an animated canvas constellation that reacts to your cursor, a Ctrl+K command palette, a working in-page terminal, and a live telemetry feed from the Raspberry Pi hosting it.'
+        'Hand-written HTML, CSS and JavaScript with no build step. The only library is three.js, for the board in the hero, and it is served from the Pi too.',
+        'The model reacts to the real machine: the chip glows with its actual temperature, heat rises with CPU load, and every telemetry request flashes the Ethernet LEDs.'
       ],
       points: [
-        'Canvas particle constellation with cursor repulsion, paused when off-screen',
-        'Command palette with fuzzy matching and full keyboard navigation',
-        'Interactive shell with tab completion and command history',
-        'Live Pi telemetry for CPU, memory, disk, temperature, load and uptime',
-        'Weather effects driven by your actual location',
-        'Full light and dark theming with reduced-motion support'
-      ]
-    },
-    {
-      id: 'homelab',
-      title: 'Self-Hosted Demo Platform',
-      year: 'Ongoing',
-      icon: 'server',
-      blurb: 'Node orchestrator that spins up throwaway Docker containers so visitors can run my desktop apps in-browser.',
-      tags: ['Node.js', 'Docker', 'Linux'],
-      detail: [
-        'Showing someone a desktop app usually means asking them to clone a repo and install a JDK. I wanted a link instead.',
-        'A Node service on my own hardware receives a demo request, starts a disposable Docker container running the app on a virtual display, and streams the session into the browser. Sessions are single-tenant and time-boxed, and the container is destroyed afterwards.'
-      ],
-      points: [
-        'Node.js orchestrator talking to the Docker API over an SSH tunnel rather than an exposed TCP socket',
-        'One session at a time with automatic expiry and cleanup',
-        'Containers seeded with realistic sample data so the demo is useful immediately',
-        'Runs on a ThinkCentre reached over Tailscale, fronted by the Pi'
+        'Procedural 3D Raspberry Pi 4 in three.js, paused when off-screen',
+        'Live telemetry polled every five seconds',
+        'Ctrl+K command palette and a working in-page shell',
+        'Served by nginx on the Pi through a Cloudflare Tunnel'
       ]
     }
   ];
 
-  const PROJECT_ICONS = {
-    db: ICON.db,
-    globe: ICON.globe,
-    code: ICON.code,
-    server: ICON.server,
-    chart: '<path stroke-linecap="round" stroke-linejoin="round" d="M4 19V10m6 9V5m6 14v-7"/>',
-    game: '<circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 11.2l-3.2-2.1a1 1 0 00-1.5.8v4.2a1 1 0 001.5.9l3.2-2.1a1 1 0 000-1.7z"/>'
-  };
-
-  const svg = (path) =>
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${path}</svg>`;
-
   /* Render */
   document.addEventListener('DOMContentLoaded', function () {
-    renderSkills();
-    renderMarquee();
-    renderProjects();
+    drawPortals();
     initSheet();
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-open]');
+      if (btn) openSheet(btn.dataset.open);
+    });
 
     // Expose for the terminal and command palette
     window.Site.data = { skills: SKILL_GROUPS, projects: PROJECTS };
     window.Site.openProject = openSheet;
+    window.Site.showSkillGroup = () => {};
   });
 
-  /* Skills UI */
-  function renderSkills() {
-    const groupsEl = document.getElementById('skillGroups');
-    const panelEl = document.getElementById('skillPanel');
-    if (!groupsEl || !panelEl) return;
-
-    groupsEl.innerHTML = SKILL_GROUPS.map((g, i) => `
-      <button class="skill-group${i === 0 ? ' is-active' : ''}" data-group="${g.id}">
-        <span class="icon-tile">${svg(ICON[g.icon])}</span>
-        <span>
-          <span class="skill-group__name">${g.name}</span><br/>
-          <span class="skill-group__count">${g.skills.length} skills</span>
-        </span>
-        <span class="skill-group__arrow">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/>
-          </svg>
-        </span>
-      </button>`).join('');
-
-    function showGroup(id) {
-      const group = SKILL_GROUPS.find((g) => g.id === id) || SKILL_GROUPS[0];
-      panelEl.innerHTML = `
-        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.5rem">
-          <h3 style="font-size:var(--step-1)">${group.name}</h3>
-          <span class="skill-group__count">${group.skills.length} entries</span>
-        </div>
-        <div class="skill-list">
-          ${group.skills.map((s, i) => `
-            <div class="skill-row" style="animation-delay:${i * 60}ms">
-              <div class="skill-row__head">
-                <span class="skill-row__name">${s.name}</span>
-                <span class="skill-row__lvl">${s.note}</span>
-              </div>
-              <div class="skill-row__track"><div class="skill-row__bar" data-level="${s.level}"></div></div>
-            </div>`).join('')}
-        </div>`;
-
-      requestAnimationFrame(() => {
-        panelEl.querySelectorAll('.skill-row__bar').forEach((bar, i) => {
-          setTimeout(() => { bar.style.width = bar.dataset.level + '%'; }, 90 + i * 70);
-        });
-      });
+  /* Eleven portal tiles around one shared core, lighting up in turn */
+  function drawPortals() {
+    const svg = document.getElementById('portalsViz');
+    if (!svg) return;
+    const cx = 240, cy = 180, r = 128;
+    let lines = '', tiles = '';
+    for (let i = 0; i < 11; i++) {
+      const a = -Math.PI / 2 + (i / 11) * Math.PI * 2;
+      const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r * 0.86;
+      lines += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" class="viz-line" style="--i:${i}"/>`;
+      tiles += `<g class="portal" style="--i:${i}"><rect x="${(x - 19).toFixed(1)}" y="${(y - 15).toFixed(1)}" width="38" height="30" rx="6"/>` +
+               `<text x="${x.toFixed(1)}" y="${(y + 5).toFixed(1)}" text-anchor="middle">λ</text></g>`;
     }
-
-    groupsEl.addEventListener('click', (e) => {
-      const btn = e.target.closest('.skill-group');
-      if (!btn) return;
-      groupsEl.querySelectorAll('.skill-group').forEach((b) => b.classList.toggle('is-active', b === btn));
-      showGroup(btn.dataset.group);
-    });
-
-    // Animate the default group in once the section is reached
-    let started = false;
-    const io = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !started) { started = true; showGroup(SKILL_GROUPS[0].id); }
-    }, { threshold: 0.2 });
-    io.observe(panelEl);
-    panelEl.innerHTML = '<div style="color:var(--text-3);font-family:var(--font-mono);font-size:var(--step--2)">Loading toolkit…</div>';
-
-    window.Site.showSkillGroup = (id) => {
-      started = true;
-      const btn = groupsEl.querySelector(`[data-group="${id}"]`);
-      if (btn) {
-        groupsEl.querySelectorAll('.skill-group').forEach((b) => b.classList.toggle('is-active', b === btn));
-      }
-      showGroup(id);
-    };
-  }
-
-  function renderMarquee() {
-    const track = document.getElementById('marqueeTrack');
-    if (!track) return;
-    const items = MARQUEE.map((t) => `<span class="marquee__item">${t}</span>`).join('');
-    track.innerHTML = items + items; // duplicated for a seamless loop
-  }
-
-  /* Projects UI */
-  function renderProjects() {
-    const grid = document.getElementById('projectGrid');
-    const filterBar = document.getElementById('projectFilters');
-    if (!grid) return;
-
-    const allTags = ['All'].concat(
-      Array.from(new Set(PROJECTS.flatMap((p) => p.tags))).sort()
-    );
-
-    if (filterBar) {
-      filterBar.innerHTML = allTags
-        .map((t, i) => `<button class="filter${i === 0 ? ' is-active' : ''}" data-tag="${t}">${t}</button>`)
-        .join('');
-    }
-
-    grid.innerHTML = PROJECTS.map((p, i) => `
-      <article class="card card--spot project" data-reveal="scale" style="--reveal-delay:${Math.min(i * 60, 260)}ms"
-               data-id="${p.id}" data-tags="${p.tags.join('|')}" tabindex="0" role="button"
-               aria-label="Open details for ${p.title}">
-        <div class="project__top">
-          <span class="icon-tile">${svg(PROJECT_ICONS[p.icon] || ICON.code)}</span>
-          <span>
-            <h3 class="project__title">${p.title}</h3>
-            <span class="project__year">${p.year}</span>
-          </span>
-        </div>
-        <p class="project__desc">${p.blurb}</p>
-        <div class="project__tags">${p.tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
-        <span class="project__more">
-          Details
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6"/>
-          </svg>
-        </span>
-      </article>`).join('');
-
-    if (window.Site.observeReveals) window.Site.observeReveals(grid);
-
-    if (filterBar) {
-      filterBar.addEventListener('click', (e) => {
-        const btn = e.target.closest('.filter');
-        if (!btn) return;
-        filterBar.querySelectorAll('.filter').forEach((b) => b.classList.toggle('is-active', b === btn));
-        applyFilter(btn.dataset.tag);
-      });
-    }
-
-    function applyFilter(tag) {
-      let shown = 0;
-      grid.querySelectorAll('.project').forEach((card) => {
-        const match = tag === 'All' || card.dataset.tags.split('|').indexOf(tag) !== -1;
-        card.classList.toggle('is-dimmed', !match);
-        if (match) shown++;
-      });
-      window.Site.log(`[FILTER] ${tag} → ${shown} project${shown === 1 ? '' : 's'}`);
-    }
-
-    grid.addEventListener('click', (e) => {
-      const card = e.target.closest('.project');
-      if (card) openSheet(card.dataset.id);
-    });
-    grid.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      const card = e.target.closest('.project');
-      if (card) { e.preventDefault(); openSheet(card.dataset.id); }
-    });
-
-    window.Site.filterProjects = applyFilter;
+    svg.innerHTML = lines + tiles +
+      `<g class="portal-core"><circle cx="${cx}" cy="${cy}" r="40"/><text x="${cx}" y="${cy + 7}" text-anchor="middle">go</text></g>`;
   }
 
   /* Detail sheet */
@@ -406,12 +236,12 @@
     document.getElementById('sheetList').innerHTML = p.points.map((d) => `<li>${d}</li>`).join('');
 
     const actions = [];
-    if (p.demo) actions.push(`<button class="btn btn--primary btn--sm" data-demo="${p.demo}">Run live demo</button>`);
-    if (p.github) actions.push(`<a class="btn btn--ghost btn--sm" href="${p.github}" target="_blank" rel="noopener">View on GitHub</a>`);
+    if (p.demo) actions.push(`<button class="btn btn--primary btn--sm" data-demo="${p.demo}">Run the live demo</button>`);
+    if (p.github) actions.push(`<a class="btn btn--ghost btn--sm" href="${p.github}" target="_blank" rel="noopener">Source on GitHub</a>`);
 
     document.getElementById('sheetTags').innerHTML =
-      p.tags.map((t) => `<span class="chip chip--gold">${t}</span>`).join('') +
-      (actions.length ? `<div style="flex-basis:100%;display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem">${actions.join('')}</div>` : '');
+      `<span class="chip">${p.tags.join(' · ')}</span>` +
+      (actions.length ? `<div class="sheet__actions">${actions.join('')}</div>` : '');
 
     const demoBtn = sheet.querySelector('[data-demo]');
     if (demoBtn) {

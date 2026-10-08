@@ -54,7 +54,7 @@
 
   /* Theme */
   function getTheme() {
-    return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   }
 
   function setTheme(theme, announce) {
@@ -62,7 +62,6 @@
     document.documentElement.setAttribute('data-theme', next);
     try {
       localStorage.setItem('theme', next);
-      localStorage.setItem('darkMode', String(next === 'dark')); // legacy key
     } catch (e) {}
     document.dispatchEvent(new CustomEvent('themechange', { detail: { theme: next } }));
     if (announce) log('[THEME] switched to ' + next);
@@ -97,7 +96,7 @@
       log(`${method} ${url} → ${res.status} (${ms}ms)`, res.ok ? 'net' : 'err');
       if (url.indexOf('/stats') === 0) {
         const el = document.getElementById('footerLatency');
-        if (el) el.textContent = `api ${ms}ms`;
+        if (el) el.textContent = ` (it answered in ${ms}ms)`;
       }
       return res;
     } catch (err) {
@@ -118,93 +117,45 @@
     const themeBtn = document.getElementById('themeBtn');
     if (themeBtn) themeBtn.addEventListener('click', () => toggleTheme());
 
-    /* Scroll progress */
-    const progress = document.getElementById('scrollProgress');
+    /* Nav border once the page has scrolled */
     const nav = document.getElementById('nav');
-    const toTop = document.getElementById('toTop');
-    let lastY = window.scrollY;
-    let ticking = false;
-
-    function onScroll() {
-      const y = window.scrollY;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      if (progress) progress.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
-      if (nav) {
-        nav.classList.toggle('is-stuck', y > 24);
-        // Hide on scroll-down, reveal on scroll-up, never over the hero
-        nav.classList.toggle('is-hidden', y > 420 && y > lastY && !document.body.classList.contains('is-locked'));
-      }
-      if (toTop) toTop.classList.toggle('is-visible', y > 700);
-      lastY = y;
-      ticking = false;
-    }
-
-    window.addEventListener('scroll', () => {
-      if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
-    }, { passive: true });
+    const onScroll = () => { if (nav) nav.classList.toggle('is-stuck', window.scrollY > 8); };
+    window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    if (toTop) toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }));
-
-    /* Reveal */
-    const revealIO = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('is-visible');
-          revealIO.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    /* Reveal. Anything already on screen or above it shows at once, and a
+       fallback timer guarantees nothing can stay hidden if the observer
+       never fires (print, background tabs, odd browsers). */
+    const revealIO = 'IntersectionObserver' in window
+      ? new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add('is-visible'); revealIO.unobserve(e.target); }
+          });
+        }, { rootMargin: '0px 0px -8% 0px' })
+      : null;
 
     function observeReveals(root) {
-      $$('[data-reveal]', root).forEach((el, i) => {
-        if (!el.style.getPropertyValue('--reveal-delay')) {
-          el.style.setProperty('--reveal-delay', Math.min(i * 55, 280) + 'ms');
+      $$('[data-reveal]', root).forEach((el) => {
+        if (!revealIO || reduceMotion || el.getBoundingClientRect().top < window.innerHeight) {
+          el.classList.add('is-visible');
+        } else {
+          revealIO.observe(el);
         }
-        revealIO.observe(el);
       });
-      $$('.tl-item', root).forEach((el) => revealIO.observe(el));
     }
     observeReveals(document);
     Site.observeReveals = observeReveals;
+    setTimeout(() => $$('[data-reveal]').forEach((el) => el.classList.add('is-visible')), 2500);
 
-    /* Section rail + nav */
-    const sections = $$('main section[id]');
-    const railItems = $$('.rail__item');
+    /* Active nav link */
     const navLinks = $$('.nav__link');
-    const indicator = document.getElementById('navIndicator');
-
-    function moveIndicator(link) {
-      if (!indicator || !link) return;
-      indicator.style.opacity = '1';
-      indicator.style.width = link.offsetWidth + 'px';
-      indicator.style.transform = `translateX(${link.offsetLeft}px)`;
-    }
-
-    function setActive(id) {
-      railItems.forEach((r) => r.classList.toggle('is-active', r.getAttribute('href') === '#' + id));
-      let matched = null;
-      navLinks.forEach((l) => {
-        const on = l.getAttribute('href') === '#' + id;
-        l.classList.toggle('is-active', on);
-        if (on) matched = l;
-      });
-      if (matched) moveIndicator(matched);
-      else if (indicator) indicator.style.opacity = '0';
-    }
-
     const spyIO = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((e) => e.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible) setActive(visible.target.id);
-    }, { threshold: [0.25, 0.5], rootMargin: '-15% 0px -45% 0px' });
-    sections.forEach((s) => spyIO.observe(s));
-
-    window.addEventListener('resize', () => {
-      const active = document.querySelector('.nav__link.is-active');
-      if (active) moveIndicator(active);
-    });
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        navLinks.forEach((l) => l.classList.toggle('is-active', l.getAttribute('href') === '#' + e.target.id));
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    $$('main section[id]').forEach((s) => spyIO.observe(s));
 
     /* Mobile drawer */
     const drawer = document.getElementById('drawer');
@@ -215,134 +166,12 @@
       drawer.classList.toggle('is-open', open);
       document.body.classList.toggle('is-locked', open);
       if (burger) burger.setAttribute('aria-expanded', String(open));
-      $$('.drawer__link', drawer).forEach((l, i) => {
-        l.style.transitionDelay = open ? i * 45 + 'ms' : '0ms';
-      });
     }
-    if (burger) burger.addEventListener('click', () => setDrawer(true));
-    const drawerClose = document.getElementById('drawerClose');
-    if (drawerClose) drawerClose.addEventListener('click', () => setDrawer(false));
-    if (drawer) {
-      $$('.drawer__link', drawer).forEach((l) => l.addEventListener('click', () => setDrawer(false)));
-      drawer.addEventListener('click', (e) => { if (e.target === drawer) setDrawer(false); });
-    }
+    if (burger) burger.addEventListener('click', () => setDrawer(!drawer.classList.contains('is-open')));
+    if (drawer) $$('.drawer__link', drawer).forEach((l) => l.addEventListener('click', () => setDrawer(false)));
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && drawer && drawer.classList.contains('is-open')) setDrawer(false);
     });
-
-    /* Custom cursor */
-    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (fine && !reduceMotion) {
-      const dot = document.getElementById('cursorDot');
-      const ring = document.getElementById('cursorRing');
-      let rx = window.innerWidth / 2, ry = window.innerHeight / 2;
-      let tx = rx, ty = ry;
-
-      window.addEventListener('mousemove', (e) => {
-        tx = e.clientX; ty = e.clientY;
-        document.body.classList.add('has-cursor');
-        if (dot) dot.style.transform = `translate(${tx}px, ${ty}px)`;
-      }, { passive: true });
-
-      (function loop() {
-        rx += (tx - rx) * 0.18;
-        ry += (ty - ry) * 0.18;
-        if (ring) ring.style.transform = `translate(${rx}px, ${ry}px)`;
-        requestAnimationFrame(loop);
-      })();
-
-      const hoverSel = 'a, button, [data-magnetic], .project, .skill-group, .filter, .rail__item, input, .console__tab';
-      document.addEventListener('mouseover', (e) => {
-        if (e.target.closest && e.target.closest(hoverSel)) document.body.classList.add('cursor-hover');
-      });
-      document.addEventListener('mouseout', (e) => {
-        if (e.target.closest && e.target.closest(hoverSel)) document.body.classList.remove('cursor-hover');
-      });
-      document.addEventListener('mouseleave', () => document.body.classList.remove('has-cursor'));
-    }
-
-    /* Magnetic buttons */
-    if (fine && !reduceMotion) {
-      $$('[data-magnetic]').forEach(bindMagnetic);
-      Site.bindMagnetic = bindMagnetic;
-    } else {
-      Site.bindMagnetic = () => {};
-    }
-
-    function bindMagnetic(el) {
-      const strength = 0.28;
-      const cap = 12;
-      const clamp = (v) => Math.max(-cap, Math.min(cap, v));
-      el.addEventListener('mousemove', (e) => {
-        const r = el.getBoundingClientRect();
-        const mx = e.clientX - (r.left + r.width / 2);
-        const my = e.clientY - (r.top + r.height / 2);
-        el.style.transform = `translate(${clamp(mx * strength)}px, ${clamp(my * strength)}px)`;
-      });
-      el.addEventListener('mouseleave', () => { el.style.transform = ''; });
-    }
-
-    /* Card spotlight + tilt */
-    document.addEventListener('mousemove', (e) => {
-      const card = e.target.closest && e.target.closest('.card--spot');
-      if (!card) return;
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
-      card.style.setProperty('--my', ((e.clientY - r.top) / r.height) * 100 + '%');
-    }, { passive: true });
-
-    if (fine && !reduceMotion) {
-      $$('[data-tilt]').forEach((el) => {
-        const wrap = el.parentElement;
-        wrap.addEventListener('mousemove', (e) => {
-          const r = wrap.getBoundingClientRect();
-          const px = (e.clientX - r.left) / r.width - 0.5;
-          const py = (e.clientY - r.top) / r.height - 0.5;
-          el.style.transform = `perspective(1000px) rotateY(${px * 9}deg) rotateX(${-py * 9}deg) translateZ(0)`;
-        });
-        wrap.addEventListener('mouseleave', () => { el.style.transform = ''; });
-      });
-    }
-
-    /* Counters */
-    const counters = $$('[data-count]');
-    if (counters.length) {
-      const countIO = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-          countIO.unobserve(e.target);
-          const target = Number(e.target.dataset.count) || 0;
-          const out = e.target.querySelector('.val');
-          const dur = 1400;
-          const t0 = performance.now();
-          (function step(now) {
-            const p = Math.min((now - t0) / dur, 1);
-            const eased = 1 - Math.pow(1 - p, 3);
-            out.textContent = String(Math.round(target * eased));
-            if (p < 1) requestAnimationFrame(step);
-          })(t0);
-        });
-      }, { threshold: 0.6 });
-      counters.forEach((c) => countIO.observe(c));
-    }
-
-    /* Timeline fill */
-    const timeline = document.getElementById('timeline');
-    const timelineFill = document.getElementById('timelineFill');
-    if (timeline && timelineFill) {
-      const updateFill = () => {
-        const r = timeline.getBoundingClientRect();
-        const start = window.innerHeight * 0.85;
-        const p = Math.max(0, Math.min(1, (start - r.top) / (r.height || 1)));
-        timelineFill.style.height = p * (timeline.clientHeight - 12) + 'px';
-      };
-      window.addEventListener('scroll', updateFill, { passive: true });
-      window.addEventListener('resize', updateFill);
-      updateFill();
-    }
-
-    /* Lamp pull cord */
-    initLamp();
 
     /* Email reveal */
     // Assembled at runtime so naive scrapers don't get a plain mailto in source.
@@ -415,85 +244,4 @@
     log('[INIT] portfolio ready', 'ok');
   });
 
-  /* Lamp: drag the beaded chain to switch the lights */
-  function initLamp() {
-    const svg = document.getElementById("lampSvg");
-    const chain = document.getElementById("lampChain");
-    const knob = document.getElementById("lampKnob");
-    if (!svg || !chain || !knob) return;
-
-    const REST = 180;      // chain end at rest
-    const MAX = 330;       // furthest it can be pulled
-    const TRIGGER = 232;   // pull past this and the switch clicks
-    const KNOB_GAP = 7;    // knob sits just below the chain end
-
-    let y = REST;
-    let pulling = false;
-    let armed = false;
-
-    function draw() {
-      chain.setAttribute("y2", y.toFixed(1));
-      knob.setAttribute("cy", (y + KNOB_GAP).toFixed(1));
-    }
-
-    /* Map a pointer position into the SVG viewBox */
-    function pointerY(e) {
-      const src = (e.touches && e.touches[0]) || e;
-      const box = svg.getBoundingClientRect();
-      const scale = 430 / box.height;
-      const local = (src.clientY - box.top) * scale;
-      return Math.max(REST, Math.min(MAX, local));
-    }
-
-    function start(e) {
-      e.preventDefault();
-      pulling = true;
-      armed = false;
-      svg.classList.add("is-pulling");
-      y = pointerY(e);
-      draw();
-    }
-
-    function move(e) {
-      if (!pulling) return;
-      e.preventDefault();
-      y = pointerY(e);
-      if (y > TRIGGER) armed = true;
-      draw();
-    }
-
-    function end() {
-      if (!pulling) return;
-      pulling = false;
-      svg.classList.remove("is-pulling");
-      if (armed) window.Site.toggleTheme();
-      armed = false;
-    }
-
-    svg.addEventListener("mousedown", start);
-    svg.addEventListener("touchstart", start, { passive: false });
-    window.addEventListener("mousemove", move);
-    window.addEventListener("touchmove", move, { passive: false });
-    window.addEventListener("mouseup", end);
-    window.addEventListener("touchend", end);
-
-    svg.addEventListener("keydown", (e) => {
-      if (e.key !== " " && e.key !== "Enter") return;
-      e.preventDefault();
-      window.Site.toggleTheme();
-      /* Give the chain a visible tug on keyboard use */
-      y = TRIGGER + 12;
-      draw();
-    });
-
-    draw();
-
-    (function spring() {
-      if (!pulling && y > REST + 0.3) {
-        y += (REST - y) * 0.14;
-        draw();
-      }
-      requestAnimationFrame(spring);
-    })();
-  }
 })();

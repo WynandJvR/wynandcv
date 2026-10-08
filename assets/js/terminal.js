@@ -50,14 +50,13 @@
       run() {
         printLines([
           '<span class="c-text">Wynand Janse van Rensburg</span>',
-          '<span class="c-dim">Full-stack Developer at WaltWorks</span>',
+          '<span class="c-dim">Full-stack developer</span>',
           '',
           'I build client platforms end to end. Since 2025 I have shipped into two',
-          'production systems: eleven serverless Go portals on AWS Lambda for Potatoes',
-          'South Africa, and a PHP platform for SLS Consultants that normalises messy',
-          'operational data using the OpenAI API and routes it through approvals.',
+          'production systems: a suite of eleven serverless Go portals on AWS Lambda,',
+          'and a PHP platform that uses AI to automate manual data processing.',
           '',
-          'BSc Information Technology, North-West University, 2025.',
+          'BSc Information Technology, 2025.',
           '',
           '<span class="c-dim">Try:</span> <span class="c-accent">skills</span>, <span class="c-accent">projects</span>, <span class="c-accent">stats</span>, <span class="c-accent">contact</span>'
         ]);
@@ -68,7 +67,7 @@
       desc: 'Background and current work',
       run() {
         printLines([
-          'Full-stack developer at WaltWorks since 2025.',
+          'Full-stack developer since 2025.',
           '',
           'I work across the whole stack: database schema and migrations, backend services',
           'and APIs, and the front end sitting on top of them. Day to day that means Go on',
@@ -144,10 +143,10 @@
       desc: 'Education and milestones',
       run() {
         printTable([
-          ['2025-now', 'Full-stack Developer at WaltWorks'],
-          ['2026-now', 'SLS Consultants platform (PHP 8.3, MySQL, OpenAI API)'],
-          ['2025-26', 'PSA portals (Go, Echo, templ, HTMX, AWS Lambda)'],
-          ['2023-25', 'BSc Information Technology, North-West University'],
+          ['2025-now', 'Full-stack developer, client platforms'],
+          ['2026-now', 'Data automation platform (PHP 8.3, MySQL, OpenAI API)'],
+          ['2025-26', 'Serverless portal suite (Go, templ, HTMX, AWS Lambda)'],
+          ['2023-25', 'BSc Information Technology'],
           ['Ongoing', 'Self-hosted infrastructure on Linux, Docker and Raspberry Pi']
         ]);
       }
@@ -194,20 +193,6 @@
       }
     },
 
-    weather: {
-      desc: 'Current conditions at your location',
-      run() {
-        const w = window.Site.weather && window.Site.weather.current;
-        if (!w) { print('<span class="c-dim">Weather has not resolved yet.</span>'); return; }
-        printTable([
-          ['conditions', esc(w.label)],
-          ['temperature', w.temp + '°C'],
-          ['location', esc(w.name || 'unknown')],
-          ['effect', esc(w.type || 'none')]
-        ]);
-      }
-    },
-
     demo: {
       desc: 'Launch a containerised demo: demo [id]',
       complete: () => (window.demoManager ? window.demoManager.list() : []),
@@ -240,7 +225,7 @@
 
     goto: {
       desc: 'Scroll to a section: goto <section>',
-      complete: () => ['home', 'objective', 'education', 'skills', 'projects', 'demos', 'pi-stats', 'contact'],
+      complete: () => ['home', 'work', 'demo', 'contact'],
       run(args) {
         if (!args[0]) { print('<span class="c-bad">Usage: goto &lt;section&gt;</span>'); return; }
         const id = args[0].toLowerCase();

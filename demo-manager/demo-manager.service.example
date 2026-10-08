@@ -1,7 +1,9 @@
 [Unit]
 Description=CV Website Demo Manager
 After=network.target
-Requires=demo-docker-tunnel.service
+# Wants, not Requires: the API stays up and reports the demo host as offline
+# when the tunnel is down, instead of nginx returning 502s.
+Wants=demo-docker-tunnel.service
 After=demo-docker-tunnel.service
 
 [Service]

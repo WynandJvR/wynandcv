@@ -4,38 +4,33 @@ Personal portfolio and CV, hand-built with no frameworks and self-hosted on a Ra
 
 ## Features
 
+- **Live machine hero**: a Raspberry Pi 4 built in three.js and driven by the real Pi serving the page. The SoC glows with its actual temperature, heat rises with CPU load, and each telemetry request flashes the Ethernet LEDs
+- **Runnable demos**: visitors run desktop apps in-browser via throwaway Docker containers, with honest online/offline status
 - **Command palette**: `Ctrl/Cmd + K` to jump anywhere or run an action
-- **Interactive shell**: a real in-page terminal (`Ctrl + \``) with tab completion, command history and live data commands
-- **Live server telemetry**: CPU, memory, disk, temperature, load and uptime streamed from the Pi
-- **Containerised demos**: visitors run desktop apps in-browser via throwaway Docker containers
-- **Animated hero**: canvas particle constellation that reacts to the cursor
-- **Weather effects**: rain, snow, cloud, fog and storm overlays driven by the visitor's real location
-- **Lamp pull-cord**: drag the cord to switch between light and dark themes
-- **Filterable project grid** with detail sheets
-- Custom cursor, magnetic buttons, scroll-spy navigation, reduced-motion and print support
+- **Interactive shell**: an in-page terminal (`Ctrl + \``) with tab completion, history and live data commands
 
 ## Structure
 
 ```
-index.html            markup
-secret.html           number-guessing game
-assets/css/style.css  design system and all component styles
+index.html              markup
+secret.html             number-guessing game
+assets/css/style.css    all styles
+assets/vendor/          three.js r160 (self-hosted)
 assets/js/
-  core.js             theme, nav, reveal, cursor, lamp, shared helpers
-  hero.js             canvas constellation and role typewriter
-  content.js          skills explorer, project grid, detail sheet
-  weather.js          location-based weather effects
-  telemetry.js        live Raspberry Pi metrics
-  demos.js            containerised demo sessions
-  terminal.js         in-page shell and log console
-  palette.js          Ctrl+K command palette
-  analytics.js        first-party page metrics
-demo-manager/         Node service that orchestrates the demo containers
+  machine.js            3D Pi hero (ES module)
+  core.js               nav, reveal, toasts, logging, shared helpers
+  content.js            project data, panel visuals, detail sheet
+  telemetry.js          polls /stats and broadcasts pi:stats
+  demos.js              containerised demo sessions
+  terminal.js           in-page shell and log console
+  palette.js            Ctrl+K command palette
+  analytics.js          first-party page metrics
+demo-manager/           Node service that orchestrates the demo containers
 ```
 
 ## Tech
 
-HTML5, CSS custom properties, vanilla JavaScript. No build step, no framework and no runtime dependencies. The only external requests are Google Fonts and the weather API.
+HTML5, CSS custom properties, vanilla JavaScript. No build step and no framework; the one library, three.js, is self-hosted. The only external request is Google Fonts.
 
 ## Local development
 

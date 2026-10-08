@@ -5,34 +5,15 @@
   /* DEMO PROJECTS: add new entries here */
   const DEMO_PROJECTS = [
     {
-      github: 'WynandJvR/ExpenseTracker',
       projectId: 'expensetracker',
-      icon: 'chart',
-      // Used until (or instead of) the GitHub API responding
-      fallback: {
-        name: 'Expense Tracker',
-        description: 'A JavaFX desktop application for tracking personal expenses with receipt scanning (OCR), category management and visual spending analytics.',
-        language: 'Java',
-        topics: ['JavaFX', 'OCR', 'Desktop App']
-      }
+      name: 'Expense Tracker',
+      language: 'Java · JavaFX',
+      description: 'A desktop app for tracking personal spending: receipt scanning with OCR, budgets per category, and charts of where the money went. It opens with sample data loaded.',
+      github: 'https://github.com/WynandJvR/ExpenseTracker'
     }
-    // { github: 'WynandJvR/RepoName', projectId: 'reponame', icon: 'code', fallback: {...} },
   ];
 
   const DEMO_API = '/demo';
-
-  const ICONS = {
-    chart: '<path stroke-linecap="round" stroke-linejoin="round" d="M4 19V10m6 9V5m6 14v-7"/>',
-    code: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 18l-5-6 5-6M15 6l5 6-5 6"/>',
-    game: '<circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 11.2l-3.2-2.1a1 1 0 00-1.5.8v4.2a1 1 0 001.5.9l3.2-2.1a1 1 0 000-1.7z"/>',
-    web: '<circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/>'
-  };
-
-  const LANG_COLORS = {
-    Java: '#b07219', JavaScript: '#f1e05a', Python: '#3572A5', Go: '#00ADD8',
-    'C#': '#178600', TypeScript: '#3178c6', HTML: '#e34c26', CSS: '#563d7c',
-    Rust: '#dea584', C: '#555555', 'C++': '#f34b7d', Ruby: '#701516'
-  };
 
   let activeSessionId = null;
   let timerInterval = null;
@@ -41,96 +22,64 @@
 
   let modal, viewer, loading, timerEl, titleEl;
 
-  /* GitHub */
-  async function fetchGitHubData(ownerRepo) {
-    const key = 'gh_' + ownerRepo;
-    try {
-      const cached = sessionStorage.getItem(key);
-      if (cached) return JSON.parse(cached);
-    } catch (e) {}
+  /* Card */
+  function renderCard(p) {
+    return `
+      <div class="demo-card" data-project-id="${p.projectId}">
+        <div class="demo-card__actions">
+          <button class="btn btn--hot demo-btn" data-start="${p.projectId}">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>Run it live
+          </button>
+          <span class="demo-card__status" data-state="checking"><span class="dot"></span><span class="demo-card__status-text">Checking the demo host</span></span>
+        </div>
+        <p class="demo-card__note" aria-live="polite"></p>
+        <a class="demo-card__src" href="${p.github}" target="_blank" rel="noopener">Source on GitHub ↗</a>
+      </div>`;
+  }
 
+  /* Ask the demo manager whether the demo machine is reachable and free */
+  async function refreshStatus() {
+    const statusEls = document.querySelectorAll('.demo-card__status');
+    if (!statusEls.length) return;
+    let state = 'offline';
+    let text = 'Offline';
+    let note = 'The demo machine is offline right now. Back soon.';
     try {
-      const res = await fetch('https://api.github.com/repos/' + ownerRepo);
-      if (!res.ok) return null;
-      const d = await res.json();
-      const result = {
-        name: d.name,
-        description: d.description,
-        language: d.language,
-        stars: d.stargazers_count,
-        forks: d.forks_count,
-        topics: d.topics || [],
-        url: d.html_url,
-        updated: d.updated_at
-      };
-      try { sessionStorage.setItem(key, JSON.stringify(result)); } catch (e) {}
-      return result;
-    } catch (e) {
-      return null;
+      const res = await fetch(DEMO_API + '/status', { cache: 'no-store' });
+      if (res.ok) {
+        const d = await res.json();
+        if (d.active) {
+          state = 'busy';
+          text = 'In use';
+          note = `Someone else is using it. It frees up in about ${Math.max(1, Math.ceil((d.remainingSeconds || 60) / 60))} min.`;
+        } else if (d.hostOnline !== false) {
+          state = 'online';
+          text = 'Ready, takes about 10s';
+          note = '';
+        }
+      }
+    } catch (e) { /* treated as offline */ }
+
+    statusEls.forEach((el) => {
+      el.dataset.state = state;
+      el.querySelector('.demo-card__status-text').textContent = text;
+    });
+    document.querySelectorAll('.demo-card__note').forEach((el) => { el.textContent = note; });
+    if (!activeSessionId) {
+      document.querySelectorAll('.demo-btn').forEach((b) => { b.disabled = state !== 'online'; });
     }
   }
 
-  /* Cards */
-  const prettify = (name) => name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[-_]/g, ' ').trim();
-
-  function renderCard(project, gh) {
-    const fb = project.fallback || {};
-    const data = gh || fb;
-    const name = prettify(data.name || project.projectId);
-    const desc = data.description || 'Project details unavailable right now.';
-    const lang = data.language || null;
-    const topics = (data.topics || []).slice(0, 4);
-    const url = (gh && gh.url) || 'https://github.com/' + project.github;
-    const stars = gh ? gh.stars : 0;
-    const forks = gh ? gh.forks : 0;
-    const dot = LANG_COLORS[lang] || '#888';
-
-    const star = stars > 0
-      ? `<span class="gh-stat"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 01.67.42l1.89 3.81 4.21.61a.75.75 0 01.41 1.28l-3.04 2.97.72 4.19a.75.75 0 01-1.09.79L8 12.35l-3.77 1.98a.75.75 0 01-1.09-.79l.72-4.19L.82 6.37a.75.75 0 01.42-1.28l4.21-.61L7.33.67A.75.75 0 018 .25z"/></svg>${stars}</span>`
-      : '';
-    const fork = forks > 0
-      ? `<span class="gh-stat"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.12a2.25 2.25 0 10-1.5 0v.88A2.25 2.25 0 005.75 8.5h1.5v2.13a2.25 2.25 0 101.5 0V8.5h1.5A2.25 2.25 0 0012.5 6.25v-.88a2.25 2.25 0 10-1.5 0v.88a.75.75 0 01-.75.75h-4.5a.75.75 0 01-.75-.75v-.88z"/></svg>${forks}</span>`
-      : '';
-
-    return `
-      <article class="card card--spot demo-card" data-project-id="${project.projectId}">
-        <div class="demo-card__top">
-          <span class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${ICONS[project.icon] || ICONS.code}</svg></span>
-          <span style="flex:1">
-            <h3 class="demo-card__title">${name}</h3>
-            <span class="gh-stats">
-              ${lang ? `<span class="gh-stat"><i class="lang-dot" style="background:${dot}"></i>${lang}</span>` : ''}
-              ${star}${fork}
-            </span>
-          </span>
-        </div>
-        <p class="demo-card__desc">${desc}</p>
-        ${topics.length ? `<div class="demo-card__tags">${topics.map((t) => `<span class="chip chip--gold">${t}</span>`).join('')}</div>` : ''}
-        <div class="demo-card__actions">
-          <button class="btn btn--primary btn--sm demo-btn" data-start="${project.projectId}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 11.2l-3.2-2.1a1 1 0 00-1.5.8v4.2a1 1 0 001.5.9l3.2-2.1a1 1 0 000-1.7z"/><circle cx="12" cy="12" r="9"/></svg>
-            Launch demo
-          </button>
-          <a class="btn btn--ghost btn--sm" href="${url}" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.79-.26.79-.58v-2.23c-3.34.73-4.03-1.42-4.03-1.42-.55-1.38-1.34-1.75-1.34-1.75-1.08-.75.09-.73.09-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.31.76-1.6-2.67-.31-5.47-1.34-5.47-5.94 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 016 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.62-5.48 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.19.7.8.58A12 12 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-            Source
-          </a>
-        </div>
-      </article>`;
-  }
-
-  async function initCards() {
+  function initCards() {
     const container = document.getElementById('demo-cards');
     if (!container || !DEMO_PROJECTS.length) return;
-
-    container.innerHTML = DEMO_PROJECTS.map((p) => renderCard(p, null)).join('');
-    const results = await Promise.all(DEMO_PROJECTS.map((p) => fetchGitHubData(p.github)));
-    container.innerHTML = DEMO_PROJECTS.map((p, i) => renderCard(p, results[i])).join('');
-
+    container.innerHTML = DEMO_PROJECTS.map(renderCard).join('');
     container.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-start]');
-      if (btn) start(btn.dataset.start);
+      if (btn && !btn.disabled) start(btn.dataset.start);
     });
+    refreshStatus();
+    setInterval(() => { if (!document.hidden) refreshStatus(); }, 30000);
   }
 
   /* Modal */
@@ -168,7 +117,7 @@
     titleEl.textContent = title;
     loading.style.display = 'flex';
     document.getElementById('demo-spinner').style.display = '';
-    document.getElementById('demo-loading-title').textContent = 'Starting demo container…';
+    document.getElementById('demo-loading-title').textContent = 'Starting the demo container';
     document.getElementById('demo-loading-msg').textContent =
       'Booting an isolated environment on the server. This usually takes a few seconds.';
     const existing = viewer.querySelector('iframe');
@@ -221,7 +170,7 @@
       window.Site.log('[DEMO] session ended', 'ok');
       activeSessionId = null;
     }
-    document.querySelectorAll('.demo-btn').forEach((b) => { b.disabled = false; });
+    refreshStatus();
   }
 
   async function start(projectId) {
@@ -229,8 +178,7 @@
     if (!project) { window.Site.toast('Unknown demo: ' + projectId, false); return; }
 
     document.querySelectorAll('.demo-btn').forEach((b) => { b.disabled = true; });
-    const label = prettify((project.fallback && project.fallback.name) || project.github.split('/')[1]);
-    showModal(label);
+    showModal(project.name);
     window.Site.log('[DEMO] requesting ' + projectId);
 
     try {
@@ -239,7 +187,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ project: projectId })
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         if (data.error === 'busy') {
@@ -249,6 +197,7 @@
           );
           return;
         }
+        if (res.status === 502 || res.status === 504) throw new Error('The demo service is not responding right now. Please try again later.');
         throw new Error(data.message || 'Failed to start demo');
       }
 
