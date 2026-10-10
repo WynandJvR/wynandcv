@@ -60,6 +60,8 @@
   function setTheme(theme, announce) {
     const next = theme === 'light' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', next === 'light' ? '#f3f1ec' : '#07080a');
     try {
       localStorage.setItem('theme', next);
     } catch (e) {}
@@ -116,6 +118,9 @@
     /* Theme button */
     const themeBtn = document.getElementById('themeBtn');
     if (themeBtn) themeBtn.addEventListener('click', () => toggleTheme());
+
+    /* Lamp pull cord */
+    initLamp();
 
     /* Nav border once the page has scrolled */
     const nav = document.getElementById('nav');
@@ -243,5 +248,91 @@
 
     log('[INIT] portfolio ready', 'ok');
   });
+
+  /* Lamp: drag the beaded chain to switch the lights */
+  function initLamp() {
+    const svg = document.getElementById('lampSvg');
+    const chain = document.getElementById('lampChain');
+    const knob = document.getElementById('lampKnob');
+    const label = document.getElementById('lampLabel');
+    if (!svg || !chain || !knob) return;
+
+    const REST = 180;      // chain end at rest
+    const MAX = 330;       // furthest it can be pulled
+    const TRIGGER = 232;   // pull past this and the switch clicks
+    const KNOB_GAP = 7;    // knob sits just below the chain end
+
+    let y = REST;
+    let pulling = false;
+    let armed = false;
+    let springing = false;
+
+    function draw() {
+      chain.setAttribute('y2', y.toFixed(1));
+      knob.setAttribute('cy', (y + KNOB_GAP).toFixed(1));
+      if (label) label.setAttribute('y', (y + KNOB_GAP + 3.5).toFixed(1));
+    }
+
+    /* Map a pointer position into the SVG viewBox */
+    function pointerY(e) {
+      const box = svg.getBoundingClientRect();
+      const local = (e.clientY - box.top) * (430 / box.height);
+      return Math.max(REST, Math.min(MAX, local));
+    }
+
+    /* Ease the chain back up, then stop the loop */
+    function spring() {
+      if (pulling || y <= REST + 0.3) {
+        if (!pulling) { y = REST; draw(); }
+        springing = false;
+        return;
+      }
+      y += (REST - y) * 0.14;
+      draw();
+      requestAnimationFrame(spring);
+    }
+    function release() {
+      if (!springing) { springing = true; requestAnimationFrame(spring); }
+    }
+
+    svg.addEventListener('pointerdown', (e) => {
+      if (!e.target.matches('rect[pointer-events="all"]')) return;
+      e.preventDefault();
+      pulling = true;
+      armed = false;
+      svg.setPointerCapture(e.pointerId);
+      svg.classList.add('is-pulling');
+      y = pointerY(e);
+      draw();
+    });
+    svg.addEventListener('pointermove', (e) => {
+      if (!pulling) return;
+      y = pointerY(e);
+      if (y > TRIGGER) armed = true;
+      draw();
+    });
+    const end = () => {
+      if (!pulling) return;
+      pulling = false;
+      svg.classList.remove('is-pulling');
+      if (armed) toggleTheme();
+      armed = false;
+      release();
+    };
+    svg.addEventListener('pointerup', end);
+    svg.addEventListener('pointercancel', end);
+
+    svg.addEventListener('keydown', (e) => {
+      if (e.key !== ' ' && e.key !== 'Enter') return;
+      e.preventDefault();
+      toggleTheme();
+      /* Give the chain a visible tug on keyboard use */
+      y = TRIGGER + 12;
+      draw();
+      release();
+    });
+
+    draw();
+  }
 
 })();

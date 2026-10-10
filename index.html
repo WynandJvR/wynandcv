@@ -40,7 +40,13 @@
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500&display=swap"/></noscript>
 
 <link rel="stylesheet" href="/assets/css/style.css?v=de483cf"/>
-<script>document.documentElement.classList.add('js');</script>
+<!-- Apply the saved theme before first paint to avoid a flash -->
+<script>
+  document.documentElement.classList.add('js');
+  try {
+    if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  } catch (e) {}
+</script>
 
 <script type="application/ld+json">
 {
@@ -90,6 +96,7 @@
 
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
+<div class="wx-overlay" id="weather-overlay" aria-hidden="true"></div>
 
 <header class="nav" id="nav">
   <div class="nav__inner">
@@ -100,7 +107,10 @@
       <a class="nav__link" href="#contact">Contact</a>
     </nav>
     <div class="nav__tools">
-      <span class="live-pill" data-live="on" title="Live readings from the Pi serving this page"><i></i><span><span data-stat="temp">–</span>°C</span></span>
+      <span class="wx-badge" id="wxBadge" title="Live weather at your location">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 014-4 5 5 0 019.7-1.3A3.5 3.5 0 1118 18H7a4 4 0 01-4-3z"/></svg>
+        <span id="wxText">Reading conditions…</span>
+      </span>
       <button class="icon-btn" id="paletteBtn" aria-label="Open command palette (Ctrl K)" title="Ctrl K">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="6.5"/><path stroke-linecap="round" d="M20 20l-4-4"/></svg>
       </button>
@@ -115,6 +125,53 @@
 
 <!-- Hero: the live machine -->
 <section class="hero" id="home">
+  <!-- Lamp: drag the cord to switch the lights -->
+  <div class="lamp">
+    <svg class="lamp__svg" id="lampSvg" viewBox="0 0 120 430" tabindex="0" role="button"
+         aria-label="Pull the chain to switch the lights">
+      <defs>
+        <radialGradient id="bulbOn" cx="38%" cy="32%">
+          <stop offset="0%" stop-color="#fff4e6"/>
+          <stop offset="45%" stop-color="#ffb15c"/>
+          <stop offset="100%" stop-color="#ff7a2f"/>
+        </radialGradient>
+        <radialGradient id="bulbOff" cx="38%" cy="32%">
+          <stop offset="0%" stop-color="#2a2d33"/>
+          <stop offset="60%" stop-color="#16181c"/>
+          <stop offset="100%" stop-color="#0d0e11"/>
+        </radialGradient>
+        <radialGradient id="lampGlow">
+          <stop offset="0%" stop-color="#ff7a2f" stop-opacity=".32"/>
+          <stop offset="45%" stop-color="#ffb15c" stop-opacity=".12"/>
+          <stop offset="100%" stop-color="#ffb15c" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <circle class="lamp__glow" cx="60" cy="112" r="105" fill="url(#lampGlow)"/>
+
+      <!-- ceiling plate and flex -->
+      <rect class="lamp__mount" x="50" y="0" width="20" height="3" rx="1.5"/>
+      <line class="lamp__line" x1="60" y1="3" x2="60" y2="58"/>
+
+      <!-- socket -->
+      <rect class="lamp__socket" x="50" y="58" width="20" height="26" rx="4"/>
+      <line class="lamp__band" x1="50" y1="66" x2="70" y2="66"/>
+      <line class="lamp__band" x1="50" y1="73" x2="70" y2="73"/>
+
+      <!-- bulb -->
+      <circle class="lamp__bulb" cx="60" cy="112" r="24"/>
+      <path class="lamp__filament" d="M51 102 Q55 120 60 106 Q65 120 69 102"/>
+
+      <!-- beaded pull chain -->
+      <path class="lamp__line" d="M70 70 Q84 74 92 86"/>
+      <line class="lamp__chain" id="lampChain" x1="92" y1="86" x2="92" y2="180"/>
+      <circle class="lamp__knob" id="lampKnob" cx="92" cy="187" r="5"/>
+      <text class="lamp__label" id="lampLabel" x="82" y="190">PULL</text>
+
+      <rect x="70" y="80" width="44" height="300" fill="transparent" pointer-events="all"/>
+    </svg>
+  </div>
+
   <div class="machine" id="machine">
     <canvas id="machine-canvas" aria-label="A 3D model of the Raspberry Pi serving this page, driven by its live readings"></canvas>
     <svg class="machine__lines" id="machine-lines" aria-hidden="true"><path/></svg>
@@ -439,6 +496,7 @@
 
 <script src="/assets/js/core.js?v=de483cf" defer></script>
 <script src="/assets/js/content.js?v=de483cf" defer></script>
+<script src="/assets/js/weather.js?v=de483cf" defer></script>
 <script src="/assets/js/telemetry.js?v=de483cf" defer></script>
 <script src="/assets/js/demos.js?v=de483cf" defer></script>
 <script src="/assets/js/terminal.js?v=de483cf" defer></script>

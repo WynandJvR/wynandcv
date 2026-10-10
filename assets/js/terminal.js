@@ -193,6 +193,20 @@
       }
     },
 
+    weather: {
+      desc: 'Current conditions at your location',
+      run() {
+        const w = window.Site.weather && window.Site.weather.current;
+        if (!w) { print('<span class="c-dim">Weather has not resolved yet.</span>'); return; }
+        printTable([
+          ['conditions', esc(w.label)],
+          ['temperature', w.temp + '°C'],
+          ['location', esc(w.name || 'unknown')],
+          ['effect', esc(w.type || 'none')]
+        ]);
+      }
+    },
+
     demo: {
       desc: 'Launch a containerised demo: demo [id]',
       complete: () => (window.demoManager ? window.demoManager.list() : []),

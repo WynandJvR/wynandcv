@@ -48,6 +48,7 @@
     out.push(
       { group: 'Actions', label: 'Open the terminal', icon: ICON.term, hint: 'Ctrl `', run: () => window.Site.openConsole('shell') },
       { group: 'Actions', label: 'Open the live log', icon: ICON.term, hint: 'logs', run: () => window.Site.openConsole('logs') },
+      { group: 'Actions', label: 'Toggle light / dark theme', icon: ICON.theme, hint: 'theme', run: () => window.Site.toggleTheme() },
       { group: 'Actions', label: 'Copy email address', icon: ICON.copy, hint: 'clipboard', run: () => window.Site.copyEmail() },
       { group: 'Actions', label: 'Print / save as PDF', icon: ICON.doc, hint: 'Ctrl P', run: () => window.print() },
       { group: 'Links', label: 'GitHub profile', icon: ICON.link, hint: 'external', run: () => window.open('https://github.com/WynandJvR', '_blank', 'noopener') },
